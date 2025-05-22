@@ -183,6 +183,7 @@ export class CustomApiHandler implements ApiHandler {
 		if (abortSignal?.aborted) {
 			throw new Error("Request aborted by user")
 		}
+		let isThinkingAnthropic = false
 		if (
 			modelId.includes("claude-3-7") ||
 			modelId.includes("claude-3.7") ||
@@ -191,10 +192,12 @@ export class CustomApiHandler implements ApiHandler {
 			const globalStateManager = GlobalStateManager.getInstance()
 			const thinking = globalStateManager.getGlobalState("thinking")
 			if (thinking) {
+				console.log(`Thinking config found: ${JSON.stringify(thinking)}`)
 				// If thinking is enabled, set tempature to 1 CAN'T BE CHANGED
-				tempature = 1
 				thinkingConfig = thinking
 				if (thinkingConfig.type === "enabled") {
+					tempature = 1
+					isThinkingAnthropic = true
 					thinking.budget_tokens = thinking.budget_tokens ?? 32_000
 				}
 			}
@@ -245,13 +248,21 @@ export class CustomApiHandler implements ApiHandler {
 			}
 			addCacheControl([lastSystemIndex, lastUserIndex, secondLastUserIndex])
 		}
-
 		// const refetchSignal = new SmartAbortSignal(5000)
 		const result = streamText({
-			...(thinkingConfig ? { providerOptions: { anthropic: { thinking: thinkingConfig } } } : {}),
+			...(!isThinkingAnthropic
+				? {}
+				: thinkingConfig
+				? { providerOptions: { anthropic: { thinking: thinkingConfig } } }
+				: {}),
 			providerOptions: {
 				anthropic: {
-					thinking: { type: "enabled", budgetTokens: 12000 },
+					// this is the default
+					...(!thinkingConfig
+						? {}
+						: {
+								thinking: { type: "enabled", budgetTokens: 12000 },
+						  }),
 				},
 			},
 			model: providerToAISDKModel(this._options, modelId),

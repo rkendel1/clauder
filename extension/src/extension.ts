@@ -1,7 +1,6 @@
 import * as vscode from "vscode"
 import { ExtensionProvider } from "./providers/extension-provider"
 import { amplitudeTracker } from "./utils/amplitude"
-import * as dotenv from "dotenv"
 import * as path from "path"
 import { extensionName } from "./shared/constants"
 import "./utils/path-helpers"
@@ -80,7 +79,6 @@ function handleFirstInstall(context: vscode.ExtensionContext) {
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	dotenv.config({ path: path.join(context.extensionPath, ".env") })
 	console.log(`Current time of activation: ${new Date().toLocaleTimeString()}`)
 	const getCurrentUser = () => {
 		return context.globalState.get("user") as { email: string; credits: number; id: string } | undefined
