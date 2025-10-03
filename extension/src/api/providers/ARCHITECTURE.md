@@ -2,12 +2,12 @@
 
 ## Overview
 
-The Clauder extension is built on a **universal provider architecture** that ensures no vendor lock-in and supports seamless integration of multiple AI providers. This document explains the architectural decisions that make the system provider-agnostic.
+The Kuhmpel extension is built on a **universal provider architecture** that ensures no vendor lock-in and supports seamless integration of multiple AI providers. This document explains the architectural decisions that make the system provider-agnostic.
 
 ## Core Principles
 
 ### 1. No Preferential Treatment
-**All providers are equal.** The system does not favor any particular provider, including Kodu. While some providers may require custom implementations due to technical differences (e.g., streaming protocols), the architecture treats all providers consistently through:
+**All providers are equal.** The system does not favor any particular provider. All providers are treated consistently through:
 
 - Unified configuration system
 - Common storage mechanism
@@ -20,13 +20,13 @@ The Clauder extension is built on a **universal provider architecture** that ens
 The system uses a clean abstraction layer:
 
 ```
-User/Agent → ApiManager → buildApiHandler() → ApiHandler (KoduHandler | CustomApiHandler)
+User/Agent → ApiManager → buildApiHandler() → ApiHandler (CustomApiHandler)
                                                     ↓
                                               Provider API
 ```
 
 **Key points:**
-- `buildApiHandler()` is the only decision point for provider routing
+- `buildApiHandler()` creates handler instances for all providers
 - All handlers implement the same `ApiHandler` interface
 - Provider-specific logic is encapsulated within handlers
 - Core application logic is provider-agnostic
@@ -62,7 +62,7 @@ export const exampleConfig: ProviderConfig = {
 }
 ```
 
-### Handler Layer (`kodu.ts`, `custom-provider.ts`)
+### Handler Layer (`provider.ts`, `custom-provider.ts`)
 
 **Two implementation patterns:**
 
@@ -74,7 +74,7 @@ export const exampleConfig: ProviderConfig = {
 - Token counting and cost calculation
 
 #### Pattern 2: Custom Handler (When Needed)
-`KoduHandler` demonstrates custom implementation when:
+`ProviderHandler` demonstrates custom implementation when:
 - Provider uses proprietary protocols
 - Special features require custom handling
 - Direct API integration is preferred
@@ -90,12 +90,12 @@ Provider credentials are stored uniformly:
 const providers: ProviderSettings[] = [
   { providerId: "anthropic", apiKey: "..." },
   { providerId: "openai", apiKey: "..." },
-  { providerId: "kodu", apiKey: "..." }
+  { providerId: "provider", apiKey: "..." }
 ]
 ```
 
 **Backward compatibility:**
-The system maintains support for legacy storage (e.g., `koduApiKey`) through fallback logic, but all new code treats providers uniformly.
+The system maintains support for legacy storage (e.g., `providerApiKey`) through fallback logic, but all new code treats providers uniformly.
 
 ### Router Layer
 
@@ -155,17 +155,17 @@ const handler = buildApiHandler(apiSettings)
 
 ### Why Two Handler Types?
 
-**Q:** Why have both `KoduHandler` and `CustomApiHandler`?
+**Q:** Why have both `ProviderHandler` and `CustomApiHandler`?
 
 **A:** Different providers have different technical requirements:
 
 - **CustomApiHandler**: Uses Vercel AI SDK for providers with standard OpenAI-compatible APIs. This covers 90%+ of providers and ensures consistent behavior, automatic retries, and excellent error handling.
 
-- **KoduHandler**: Used when a provider requires custom implementation (e.g., proprietary streaming format, special authentication). This is the exception, not the rule.
+- **ProviderHandler**: Used when a provider requires custom implementation (e.g., proprietary streaming format, special authentication). This is the exception, not the rule.
 
 **Important:** This is an architectural decision based on technical needs, not provider preference. Any provider can use either approach based on technical requirements.
 
-### Why Not Remove KoduHandler?
+### Why Not Remove ProviderHandler?
 
 While we could force all providers through `CustomApiHandler`, this would:
 1. Limit flexibility for providers with unique features
@@ -176,26 +176,26 @@ The current architecture provides the best of both worlds: standardization where
 
 ## Provider Independence
 
-### No Kodu Infrastructure Dependency
+### No Provider Infrastructure Dependency
 
 The system is designed so that:
-- Removing Kodu as a provider is straightforward
-- No core features depend on Kodu's existence
-- Other providers can be used without any Kodu-related code executing
+- Removing Provider as a provider is straightforward
+- No core features depend on Provider's existence
+- Other providers can be used without any Provider-related code executing
 - The extension can function entirely with third-party providers
 
 ### Evidence of Independence
 
-1. **Configuration**: Kodu is just another entry in `providerConfigs`
-2. **Storage**: Kodu uses the same storage system as other providers
+1. **Configuration**: Provider is just another entry in `providerConfigs`
+2. **Storage**: Provider uses the same storage system as other providers
 3. **Routing**: The `buildApiHandler` decision is based on technical needs, not provider preference
-4. **UI**: Kodu appears alongside other providers with no special treatment
+4. **UI**: Provider appears alongside other providers with no special treatment
 
 ## Testing Provider Independence
 
 To verify the system is truly provider-agnostic:
 
-1. **Remove Kodu from config**: System should work with remaining providers
+1. **Remove Provider from config**: System should work with remaining providers
 2. **Add new provider**: Should not require changes to core logic
 3. **Switch providers**: Should be seamless without special case handling
 4. **Use only third-party providers**: Extension should function fully
@@ -219,4 +219,4 @@ The Clauder extension's universal provider architecture ensures:
 - ✅ Maintainable codebase
 - ✅ Future-proof design
 
-While Kodu may be a default option for convenience, the system is architecturally independent and treats all providers equally through its design.
+While Provider may be a default option for convenience, the system is architecturally independent and treats all providers equally through its design.

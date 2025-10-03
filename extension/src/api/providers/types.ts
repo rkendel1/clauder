@@ -104,18 +104,12 @@ export interface OpenAICompatibleSettings extends BaseProviderSettings, Provider
 	// ...ProviderCustomSchema
 }
 
-export interface KoduSettings extends BaseProviderSettings {
-	providerId: "kodu"
-	apiKey: string
-}
-
 export interface MistralSettings extends BaseProviderSettings {
 	providerId: "mistral"
 	apiKey: string
 }
 
 export type ProviderSettings =
-	| KoduSettings
 	| GoogleGenAISettings
 	| GoogleVertexSettings
 	| AmazonBedrockSettings

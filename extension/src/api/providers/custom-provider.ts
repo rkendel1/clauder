@@ -1,5 +1,5 @@
 import { ApiConstructorOptions, ApiHandler, ApiHandlerOptions } from ".."
-import { koduSSEResponse } from "../../shared/kodu"
+import { ApiStreamResponse } from "../../shared/api-types"
 import { CoreMessage, LanguageModel, LanguageModelV1, smoothStream, streamText } from "ai"
 import { createDeepSeek } from "@ai-sdk/deepseek"
 import { createOpenAI } from "@ai-sdk/openai"
@@ -177,7 +177,7 @@ export class CustomApiHandler implements ApiHandler {
 		modelId,
 		appendAfterCacheToLastMessage,
 		updateAfterCacheInserts,
-	}: Parameters<ApiHandler["createMessageStream"]>[0]): AsyncIterableIterator<koduSSEResponse> {
+	}: Parameters<ApiHandler["createMessageStream"]>[0]): AsyncIterableIterator<ApiStreamResponse> {
 		const convertedMessages: CoreMessage[] = []
 		let thinkingConfig: GlobalState["thinking"] | undefined
 		if (abortSignal?.aborted) {

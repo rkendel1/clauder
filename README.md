@@ -1,22 +1,22 @@
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kodu-ai.claude-dev-experimental" target="_blank"><strong>Download Extension</strong></a> | <a href="https://discord.gg/Fn97SD34qk" target="_blank"><strong>Join the Discord</strong></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=rkendel1.claude-dev-experimental" target="_blank"><strong>Download Extension</strong></a> | <a href="https://discord.gg/Fn97SD34qk" target="_blank"><strong>Join the Discord</strong></a>
 </p>
 
 # 👋 Hey there !
 
-<img src="./extension/assets/kodu.png" width="100" align="right" alt="Claude Coder Logo" />
+<img src="./extension/assets/kodu.png" width="100" align="right" alt="Kuhmpel Logo" />
 
-Welcome to Claude Coder. Whether you're a developer looking to supercharge your workflow, or someone with a brilliant idea but limited coding experience, you're in the right place. I created this tool to bridge the gap between imagination and implementation, making coding more accessible and efficient for everyone.
+Welcome to Kuhmpel. Whether you're a developer looking to supercharge your workflow, or someone with a brilliant idea but limited coding experience, you're in the right place. I created this tool to bridge the gap between imagination and implementation, making coding more accessible and efficient for everyone.
 
-## 🚀 What's Claude Coder?
+## 🚀 What's Kuhmpel?
 
-Think of Claude Coder as your 24/7 AI-powered Software Developer. It's a VS Code extension that adapts to your skill level, helping you bring ideas to life faster than ever before.
+Think of Kuhmpel as your 24/7 AI-powered Software Developer. It's a VS Code extension that adapts to your skill level, helping you bring ideas to life faster than ever before.
 
 **🎯 Multi-Provider Support**: Choose from multiple AI providers including Anthropic, OpenAI, DeepSeek, Google, Mistral, and more. No vendor lock-in - switch providers seamlessly based on your needs. [Learn more about provider support](PROVIDER-SUPPORT.md)
 
 All you need to is tell Claude what's your task and Claude will take care of it for you, need a website? dashboard? server? design? Claude got it all covered for you.
 
-### 🌟 Here's what Claude Coder can do for you:
+### 🌟 Here's what Kuhmpel can do for you:
 
 - 💡 **Idea to Implementation**: Transform concepts into code, whether you're starting from scratch or building complex systems
 - 🎨 **Design to Reality**: Convert mockups and wireframes into functional applications
@@ -29,7 +29,7 @@ All you need to is tell Claude what's your task and Claude will take care of it 
 
 ## 🎬 See it in action
 
-Here's a demo of Claude Coder helping Joy create her landing page for her business in Tokyo under 5 minutes:
+Here's a demo of Kuhmpel helping Joy create her landing page for her business in Tokyo under 5 minutes:
 [Joy Coffee Shop Preview](https://joy-coffee-shop.vercel.app)
 
 
@@ -46,19 +46,19 @@ Here's a demo of Claude Coder helping Joy create her landing page for her busine
 ## 🛠 Getting Started
 
 1. **Install VS Code**: If you haven't already, [download it here](https://code.visualstudio.com/).
-2. **Add Claude Coder**:
+2. **Add Kuhmpel**:
    - Open VS Code
    - Click the puzzle piece icon on the left sidebar
-   - Search for ["Claude Coder"](https://www.kodu.ai/l/ext)
+   - Search for ["Kuhmpel"](https://www.github.com/rkendel1/l/ext)
    - Click "Install"
 3. **Start Coding**:
    - Open a project or create a new file
    - Describe what you want to build or get help with
-   - Let Claude Coder assist you in bringing your ideas to life!
+   - Let Kuhmpel assist you in bringing your ideas to life!
 
 ## 💖 Why I Made This
 
-As someone who's been in tech for years, I've seen the challenges faced by both newcomers and experienced developers. I wanted to create a tool that could level the playing field, making development more accessible to beginners while also boosting the productivity of seasoned coders. Claude Coder is my way of empowering everyone to build amazing things, regardless of their coding background.
+As someone who's been in tech for years, I've seen the challenges faced by both newcomers and experienced developers. I wanted to create a tool that could level the playing field, making development more accessible to beginners while also boosting the productivity of seasoned coders. Kuhmpel is my way of empowering everyone to build amazing things, regardless of their coding background.
 
 ## 🤝 Join Our Community
 
@@ -66,26 +66,26 @@ Whether you're stuck on a problem, have a cool idea to share, or just want to co
 
 ## 🙏 Special Thanks
 
-A big shoutout to the amazing projects and people that inspired Claude Coder:
+A big shoutout to the amazing projects and people that inspired Kuhmpel:
 
 - **Aider**: For innovative ideas on enhancing user experience
 - **Claude Dev**: Especially Saoud, for laying an incredible foundation
 
 ## 🚀 Ready to Elevate Your Coding?
 
-[Get Claude Coder Now](https://www.kodu.ai/l/ext) and start transforming your ideas into reality!
+[Get Kuhmpel Now](https://www.github.com/rkendel1/l/ext) and start transforming your ideas into reality!
 
-Whether you're crafting your first "Hello, World!" or architecting complex systems, Claude Coder is here to help you push the boundaries of what's possible. Can't wait to see what you create! 🌟
+Whether you're crafting your first "Hello, World!" or architecting complex systems, Kuhmpel is here to help you push the boundaries of what's possible. Can't wait to see what you create! 🌟
 
 ---
 
 <details>
 <summary>🔧 For the tech-savvy: How to Contribute</summary>
 
-If you're a developer and want to help make Claude Coder even better, here's how:
+If you're a developer and want to help make Kuhmpel even better, here's how:
 
-1. Clone the repo: `git clone https://github.com/kodu-ai/claude-coder.git`
-2. Open in VS Code: `code claude-coder`
+1. Clone the repo: `git clone https://github.com/rkendel1/kuhmpel.git`
+2. Open in VS Code: `code kuhmpel`
 3. Navigate to extension folder: `cd extension`
 4. Install dependencies: `npm run install:all`
 5. Run with `F5`
