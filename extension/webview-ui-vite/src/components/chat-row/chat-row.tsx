@@ -35,8 +35,6 @@ const removeThinking = (text?: string) => {
 }
 
 const subMsgSayList: ClaudeSay[] = [
-	"unauthorized",
-	"payment_required",
 	"custom_provider_error",
 	"chat_finished",
 	"chat_truncated",
@@ -49,10 +47,6 @@ const ChatRowV1: React.FC<ChatRowProps> = ({ message, isFirst, nextMessage }) =>
 		switch (message.type) {
 			case "say":
 				switch (message.say) {
-					case "unauthorized":
-						return <ErrorMsgComponent type="unauthorized" />
-					case "payment_required":
-						return <ErrorMsgComponent type="payment_required" />
 					case "custom_provider_error":
 						return <CustomProviderSettingRequired text={message.text ?? ""} />
 					case "chat_truncated":

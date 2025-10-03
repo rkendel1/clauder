@@ -17,7 +17,6 @@ export interface ApiHandlerMessageResponse {
 export type ApiConfiguration = {
 	providerId: ProviderId
 	modelId: string
-	koduApiKey: string
 }
 
 export type ApiHandlerOptions = Omit<ProviderConfig, "models"> & {

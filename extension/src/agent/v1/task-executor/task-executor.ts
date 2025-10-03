@@ -403,14 +403,6 @@ export class TaskExecutor extends TaskExecutorUtils {
 				}
 				if (error instanceof ApiError) {
 					console.log("[TaskExecutor] ApiError:", error)
-					if (error.errorCode === API_ERROR_CODES.AUTHENTICATION_ERROR) {
-						await this.handleApiError(new TaskError({ type: "UNAUTHORIZED", message: error.message }))
-						return
-					}
-					if (error.errorCode === API_ERROR_CODES.PAYMENT_REQUIRED) {
-						await this.handleApiError(new TaskError({ type: "PAYMENT_REQUIRED", message: error.message }))
-						return
-					}
 					await this.handleApiError(new TaskError({ type: "API_ERROR", message: error.message }))
 					return
 				}
@@ -747,11 +739,6 @@ export class TaskExecutor extends TaskExecutorUtils {
 
 		await this.stateManager.claudeMessagesManager.overwriteClaudeMessages(modifiedClaudeMessages, undefined, true)
 		this.consecutiveErrorCount++
-		if (error instanceof TaskError && (error.type === "PAYMENT_REQUIRED" || error.type === "UNAUTHORIZED")) {
-			this.state = TaskState.IDLE
-			this.say(error.type === "PAYMENT_REQUIRED" ? "payment_required" : "unauthorized", error.message)
-			return
-		}
 		if (error instanceof CustomProviderError) {
 			this.state = TaskState.IDLE
 			this.say(
