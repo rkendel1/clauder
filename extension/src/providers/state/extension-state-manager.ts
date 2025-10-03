@@ -1,7 +1,6 @@
 import { GlobalStateManager } from "./global-state-manager"
 import { HistoryItem, isSatifiesHistoryItem } from "../../shared/history-item"
 import { SecretStateManager } from "./secret-state-manager"
-import { fetchKoduUser as fetchKoduUserAPI } from "../../api/providers/kodu"
 import { ExtensionProvider } from "../extension-provider"
 import { ExtensionState, isV1ClaudeMessage, V1ClaudeMessage } from "../../shared/messages/extension-message"
 
@@ -52,7 +51,6 @@ export class ExtensionStateManager {
 			this.globalStateManager.getGlobalState("inlineEditOutputType"),
 			this.globalStateManager.getGlobalState("observerSettings"),
 			this.globalStateManager.getGlobalState("apiConfig"),
-			this.secretStateManager.getSecretState("koduApiKey"),
 			this.globalStateManager.getGlobalState("gitCommitterType"),
 		])
 
@@ -83,7 +81,7 @@ export class ExtensionStateManager {
 			?.getStateManager()
 			?.apiManager.getModelInfo()?.contextWindow
 		if (apiConfig) {
-			apiConfig.koduApiKey = koduApiKey
+			// API config available
 		}
 
 		return {
@@ -160,24 +158,11 @@ export class ExtensionStateManager {
 		await this.globalStateManager.updateGlobalState("taskHistory", [])
 	}
 
-	async fetchKoduUser() {
-		const koduApiKey = await this.secretStateManager.getSecretState("koduApiKey")
-		if (koduApiKey) {
-			return await fetchKoduUserAPI({ apiKey: koduApiKey })
-		}
-		return null
-	}
-
 	async setSkipWriteAnimation(value: boolean) {
 		this.context.getKoduDev()?.getStateManager()?.setSkipWriteAnimation(value)
 		return this.globalStateManager.updateGlobalState("skipWriteAnimation", value)
 	}
-	async updateKoduCredits(credits: number) {
-		const user = await this.globalStateManager.getGlobalState("user")
-		if (user) {
-			user.credits = credits
-			await this.globalStateManager.updateGlobalState("user", user)
-		}
+}
 	}
 
 	setCustomInstructions(value: string | undefined) {

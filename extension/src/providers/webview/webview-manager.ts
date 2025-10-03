@@ -19,7 +19,6 @@ import { PromptStateManager } from "../state/prompt-state-manager"
 import { PromptManager } from "./prompt-manager"
 import { ExtensionContext } from "../../router/utils/context"
 import { ExtensionServer } from "../../router/utils/extension-server"
-import { koduConfig } from "../../api/providers/config/kodu"
 
 /**
  * Represents an item in the file tree structure.
@@ -461,24 +460,12 @@ export class WebviewManager {
 					case "exportTaskWithId":
 						await this.provider.getTaskManager().exportTaskWithId(message.text!)
 						break
-					case "didClickKoduSignOut":
-						await this.provider.getApiManager().signOutKodu()
-						await this.postBaseStateToWebview()
-						break
 					case "commandTimeout":
 						await GlobalStateManager.getInstance().updateGlobalState(
 							"commandTimeout",
 							message.commandTimeout
 						)
 						await this.postBaseStateToWebview()
-						break
-					case "fetchKoduCredits":
-						await this.provider.getApiManager().fetchKoduCredits()
-						await this.postMessageToWebview({
-							type: "action",
-							action: "koduCreditsFetched",
-							state: await this.getBaseStateToPostToWebview(),
-						})
 						break
 					case "setInlineEditMode":
 						await this.provider
