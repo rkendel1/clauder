@@ -205,7 +205,7 @@ const providerRouter = router({
 				providerId: input.providerId as ProviderId,
 				modelId: input.modelId,
 			})
-			await ctx.provider.koduDev?.getApiManager().pullLatestApi()
+			await ctx.provider.mainAgent?.getApiManager().pullLatestApi()
 
 			return { success: true }
 		}),
@@ -234,7 +234,7 @@ const providerRouter = router({
 		const newProviders = [...providers, newProvider]
 
 		await SecretStateManager.getInstance().updateSecretState("providers", JSON.stringify(newProviders))
-		await ctx.provider.koduDev?.getApiManager().pullLatestApi()
+		await ctx.provider.mainAgent?.getApiManager().pullLatestApi()
 
 		return { provider: newProvider }
 	}),
@@ -251,7 +251,7 @@ const providerRouter = router({
 
 		const newProviders = providers.map((p) => (p.providerId === input.providerId ? input : p))
 		await SecretStateManager.getInstance().updateSecretState("providers", JSON.stringify(newProviders))
-		await ctx.provider.koduDev?.getApiManager().pullLatestApi()
+		await ctx.provider.mainAgent?.getApiManager().pullLatestApi()
 
 		return { provider: input }
 	}),
@@ -262,7 +262,7 @@ const providerRouter = router({
 		const newProviders = providers.filter((p) => p.providerId !== input.id)
 
 		await SecretStateManager.getInstance().updateSecretState("providers", JSON.stringify(newProviders))
-		await ctx.provider.koduDev?.getApiManager().pullLatestApi()
+		await ctx.provider.mainAgent?.getApiManager().pullLatestApi()
 
 		return { success: true }
 	}),

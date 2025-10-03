@@ -144,8 +144,8 @@ Now, it's your turn to evaluate the agent's last action. Remember to provide a c
 export class ObserverHook extends BaseHook {
 	private options: ObserverHookOptions
 
-	constructor(options: ObserverHookOptions, koduDev: MainAgent) {
-		super(options, koduDev)
+	constructor(options: ObserverHookOptions, mainAgent: MainAgent) {
+		super(options, mainAgent)
 		this.options = options
 	}
 

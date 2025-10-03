@@ -54,7 +54,7 @@ export class ToolExecutor {
 	/** Current working directory for tool execution */
 	private readonly cwd: string
 	/** Reference to the KoduDev instance */
-	private readonly koduDev: MainAgent
+	private readonly mainAgent: MainAgent
 	/** Parser for handling tool commands and updates */
 	private readonly toolParser: ToolParser
 	/** Queue for managing sequential tool execution */
@@ -73,7 +73,7 @@ export class ToolExecutor {
 	 */
 	constructor(options: AgentToolOptions) {
 		this.cwd = options.cwd
-		this.mainAgent = options.koduDev
+		this.mainAgent = options.mainAgent
 		this.queue = new PQueue({ concurrency: 1 })
 
 		this.toolParser = new ToolParser(
@@ -95,7 +95,7 @@ export class ToolExecutor {
 			cwd: this.cwd,
 			alwaysAllowReadOnly: this.mainAgent.getStateManager().alwaysAllowReadOnly,
 			alwaysAllowWriteOnly: this.mainAgent.getStateManager().alwaysAllowWriteOnly,
-			koduDev: this.mainAgent,
+			mainAgent: this.mainAgent,
 			setRunningProcessId: this.setRunningProcessId.bind(this),
 			agentName: this.mainAgent.getStateManager().subAgentManager.state?.name,
 		}

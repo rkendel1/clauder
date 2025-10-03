@@ -131,7 +131,7 @@ export abstract class BaseAgentTool<T extends ToolParams> {
 			cwd: this.cwd,
 			alwaysAllowReadOnly: this.alwaysAllowReadOnly,
 			alwaysAllowWriteOnly: this.alwaysAllowWriteOnly,
-			koduDev: this.mainAgent,
+			mainAgent: this.mainAgent,
 			setRunningProcessId: this.setRunningProcessId,
 		}
 	}

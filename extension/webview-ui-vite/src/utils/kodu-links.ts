@@ -6,13 +6,20 @@
 /**
  * @deprecated This function is deprecated
  */
-export function getKoduAddCreditsUrl(): string {
+export function getKoduAddCreditsUrl(uriScheme?: string): string {
 	return ""
 }
 
 /**
  * @deprecated This function is deprecated
  */
-export function getKoduOfferUrl(): string {
+export function getKoduOfferUrl(uriScheme?: string): string {
 	return ""
+}
+
+/**
+ * @deprecated This function is deprecated
+ */
+export function loginKodu(params: { uriScheme: string; extensionName: string }): void {
+	// No-op
 }
