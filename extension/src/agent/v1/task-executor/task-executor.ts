@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk"
 import { ExtensionProvider } from "../../../providers/extension-provider"
 import { isV1ClaudeMessage } from "../../../shared/messages/extension-message"
 import { toolResponseToAIState } from "../../../shared/format-tools"
-import { KODU_ERROR_CODES, KoduError, koduSSEResponse } from "../../../shared/kodu"
+import { API_ERROR_CODES, ApiError, ApiStreamResponse } from "../../../shared/api-types"
 import { ChatTool } from "../../../shared/new-tools"
 import { ChunkProcessor } from "../chunk-proccess"
 import { StateManager } from "../state-manager"
@@ -401,13 +401,13 @@ export class TaskExecutor extends TaskExecutorUtils {
 					await this.handleApiError(error)
 					return
 				}
-				if (error instanceof KoduError) {
-					console.log("[TaskExecutor] KoduError:", error)
-					if (error.errorCode === KODU_ERROR_CODES.AUTHENTICATION_ERROR) {
+				if (error instanceof ApiError) {
+					console.log("[TaskExecutor] ApiError:", error)
+					if (error.errorCode === API_ERROR_CODES.AUTHENTICATION_ERROR) {
 						await this.handleApiError(new TaskError({ type: "UNAUTHORIZED", message: error.message }))
 						return
 					}
-					if (error.errorCode === KODU_ERROR_CODES.PAYMENT_REQUIRED) {
+					if (error.errorCode === API_ERROR_CODES.PAYMENT_REQUIRED) {
 						await this.handleApiError(new TaskError({ type: "PAYMENT_REQUIRED", message: error.message }))
 						return
 					}
@@ -427,7 +427,7 @@ export class TaskExecutor extends TaskExecutorUtils {
 	}
 
 	private async processApiResponse(
-		stream: AsyncGenerator<koduSSEResponse, any, unknown>,
+		stream: AsyncGenerator<ApiStreamResponse, any, unknown>,
 		startedReqId: number
 	): Promise<void> {
 		if (this.state !== TaskState.PROCESSING_RESPONSE || this.isRequestCancelled || this.isAborting) {
@@ -505,7 +505,7 @@ export class TaskExecutor extends TaskExecutorUtils {
 							true
 						)
 						this.stateManager.providerRef.deref()?.getWebviewManager()?.postBaseStateToWebview()
-						throw new KoduError({ code: chunk.body.status ?? 500 })
+						throw new ApiError({ code: chunk.body.status ?? 500 })
 					}
 				},
 

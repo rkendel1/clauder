@@ -14,7 +14,6 @@ import { PromptStateManager } from "./providers/state/prompt-state-manager"
 import DB from "./db"
 import { OpenRouterModelCache } from "./api/providers/config/openrouter-cache"
 import { SecretStateManager } from "./providers/state/secret-state-manager"
-import { fetchKoduUser } from "./api/providers/kodu"
 import { GlobalStateManager } from "./providers/state/global-state-manager"
 
 /*
@@ -27,45 +26,6 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/framewo
 */
 
 let outputChannel: vscode.OutputChannel
-var creditFetchInterval: NodeJS.Timeout | null | number = null
-var lastFetchedAt = 0
-
-async function updateUserCredit(provider?: ExtensionProvider) {
-	const now = Date.now()
-	if (now - lastFetchedAt < 5000) {
-		return
-	}
-	lastFetchedAt = now
-	const user = await provider?.getStateManager()?.fetchKoduUser()
-	if (user) {
-		provider?.getStateManager().updateKoduCredits(user.credits)
-		provider?.getWebviewManager().postMessageToWebview({
-			type: "action",
-			action: "koduCreditsFetched",
-			user,
-		})
-	}
-}
-
-async function startCreditFetch(provider: ExtensionProvider) {
-	const now = Date.now()
-	if (now - lastFetchedAt > 500) {
-		await updateUserCredit(provider)
-	}
-	lastFetchedAt = now
-	if (!creditFetchInterval) {
-		creditFetchInterval = setInterval(() => {
-			updateUserCredit(provider)
-		}, 5050)
-	}
-}
-
-function stopCreditFetch() {
-	if (creditFetchInterval) {
-		clearInterval(creditFetchInterval)
-		creditFetchInterval = null
-	}
-}
 
 function handleFirstInstall(context: vscode.ExtensionContext) {
 	const isFirstInstall = context.globalState.get("isFirstInstall", true)
@@ -98,29 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
 		.then(() => {
 			handleFirstInstall(context)
 		})
-	outputChannel.appendLine("Kodu extension activated")
+	outputChannel.appendLine("Kuhmpel extension activated")
 	const sidebarProvider = new ExtensionProvider(context, outputChannel)
 	context.subscriptions.push(outputChannel)
-	console.log(`Kodu extension activated`)
-
-	// Set up the window state change listener
-	context.subscriptions.push(
-		vscode.window.onDidChangeWindowState((windowState) => {
-			if (windowState.focused) {
-				startCreditFetch(sidebarProvider)
-			} else {
-				stopCreditFetch()
-			}
-		})
-	)
-
-	// Start fetching if the window is already focused when the extension activates
-	if (vscode.window.state.focused) {
-		startCreditFetch(sidebarProvider)
-	}
-
-	// Make sure to stop fetching when the extension is deactivated
-	context.subscriptions.push({ dispose: stopCreditFetch })
+	console.log(`Kuhmpel extension activated`)
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(ExtensionProvider.sideBarId, sidebarProvider, {

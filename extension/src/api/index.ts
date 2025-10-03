@@ -1,7 +1,6 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
-import { KoduHandler } from "./providers/kodu"
+import { ApiStreamResponse } from "../shared/api-types"
 import { WebSearchResponseDto } from "./interfaces"
-import { koduSSEResponse } from "../shared/kodu"
 import { ApiHistoryItem } from "../agent/v1/main-agent"
 import { CustomApiHandler } from "./providers/custom-provider"
 import { PROVIDER_IDS, ProviderId } from "./providers/constants"
@@ -53,7 +52,7 @@ export interface ApiHandler {
 			messages: ApiHistoryItem[],
 			systemMessages: Anthropic.Beta.PromptCaching.Messages.PromptCachingBetaTextBlockParam[]
 		) => Promise<[ApiHistoryItem[], Anthropic.Beta.PromptCaching.Messages.PromptCachingBetaTextBlockParam[]]>
-	}): AsyncIterableIterator<koduSSEResponse>
+	}): AsyncIterableIterator<ApiStreamResponse>
 
 	get options(): ApiConstructorOptions
 
@@ -66,24 +65,17 @@ export interface ApiHandler {
  * This function implements a provider-agnostic routing mechanism:
  * - All providers are treated equally through the ApiHandler interface
  * - Handler selection is based on technical requirements, not provider preference
- * - Kodu uses KoduHandler due to its custom streaming protocol implementation
- * - All other providers use CustomApiHandler which leverages the universal AI SDK
+ * - All providers use CustomApiHandler which leverages the universal AI SDK
  * 
  * Design rationale:
- * - CustomApiHandler (via Vercel AI SDK) provides consistent behavior for OpenAI-compatible APIs
- * - KoduHandler demonstrates that custom implementations are supported when technically necessary
- * - Any provider can use either handler pattern based on technical needs
+ * - CustomApiHandler (via Vercel AI SDK) provides consistent behavior for all APIs
  * - The interface contract (ApiHandler) ensures all handlers behave consistently
+ * - System is fully provider-neutral with no coupling to specific vendors
  * 
  * @param configuration - Provider settings and model configuration
- * @returns An ApiHandler instance (either KoduHandler or CustomApiHandler)
+ * @returns An ApiHandler instance
  */
 export function buildApiHandler(configuration: ApiConstructorOptions): ApiHandler {
-	// Use KoduHandler only for the Kodu provider, all others use CustomApiHandler
-	// This maintains backward compatibility while treating Kodu as a regular provider
-	if (configuration.providerSettings.providerId === "kodu") {
-		return new KoduHandler(configuration)
-	}
 	return new CustomApiHandler(configuration)
 }
 

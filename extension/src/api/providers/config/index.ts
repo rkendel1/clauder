@@ -1,7 +1,6 @@
 // providers/index.ts
 import { deepseekConfig } from "./deepseek"
 import { openaiConfig } from "./openai"
-import { koduConfig } from "./kodu"
 import { PROVIDER_IDS } from "../constants"
 import { ProviderConfig } from "../types"
 import { googleGenAIConfig } from "./google-genai"
@@ -16,7 +15,6 @@ import { openRouterConfig } from "./openrouter"
  * This ensures a truly provider-agnostic architecture.
  */
 export const providerConfigs: Record<string, ProviderConfig> = {
-	[PROVIDER_IDS.KODU]: koduConfig,
 	[PROVIDER_IDS.DEEPSEEK]: deepseekConfig,
 	[PROVIDER_IDS.OPENAI]: openaiConfig,
 	[PROVIDER_IDS.GOOGLE_GENAI]: googleGenAIConfig,
@@ -26,18 +24,6 @@ export const providerConfigs: Record<string, ProviderConfig> = {
 	[PROVIDER_IDS.OPENROUTER]: openRouterConfig,
 	// Add other providers here as they're created
 }
-
-/**
- * Convenience export for non-Kodu providers.
- * Note: This is purely for convenience (e.g., UI filtering) and does not
- * represent any architectural distinction. Kodu is treated identically to
- * other providers in the core system.
- * 
- * @deprecated Consider using providerConfigs directly and filtering as needed
- */
-export const customProvidersConfigs: Record<string, ProviderConfig> = Object.fromEntries(
-	Object.entries(providerConfigs).filter(([providerId]) => providerId !== PROVIDER_IDS.KODU)
-)
 
 /**
  * Flat list of all models from all providers.

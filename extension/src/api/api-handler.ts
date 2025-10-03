@@ -7,7 +7,7 @@
 import axios from "axios"
 import { ApiConstructorOptions, ApiHandler, buildApiHandler } from "."
 import { ExtensionProvider } from "../providers/extension-provider"
-import { KoduError, koduSSEResponse } from "../shared/kodu"
+import { ApiError, ApiStreamResponse } from "../shared/api-types"
 import { amplitudeTracker } from "../utils/amplitude"
 import { ApiHistoryItem } from "../agent/v1/types"
 import { isTextBlock } from "../agent/v1/utils"
@@ -114,7 +114,7 @@ ${this.customInstructions.trim()}
 		},
 		skipProcessing = false,
 		postProcessConversationCallback?: (apiConversationHistory: ApiHistoryItem[]) => Promise<void>
-	): AsyncGenerator<koduSSEResponse> {
+	): AsyncGenerator<ApiStreamResponse> {
 		const provider = this.providerRef.deref()
 		if (!provider || !provider.koduDev) {
 			throw new Error("Provider reference has been garbage collected")
@@ -176,7 +176,7 @@ ${this.customInstructions.trim()}
 					this.log(s, msg, ...args)
 				)
 				if (result === "chat_finished") {
-					throw new KoduError({ code: 413 })
+					throw new ApiError({ code: 413 })
 				}
 			}
 			// Process conversation history using our external utility
@@ -287,17 +287,17 @@ ${this.customInstructions.trim()}
 						throw streamError
 					}
 					if (streamError instanceof Error && streamError.message === "aborted") {
-						throw new KoduError({ code: 1 })
+						throw new ApiError({ code: 1 })
 					}
 					if (axios.isAxiosError(streamError)) {
 						if (streamError.response?.status === 401) {
-							throw new KoduError({ code: 401 })
+							throw new ApiError({ code: 401 })
 						}
 						if (streamError.response?.status === 402) {
-							throw new KoduError({ code: 402 })
+							throw new ApiError({ code: 402 })
 						}
 						// convert axios error to kodu error
-						throw new KoduError({ code: streamError.response?.status || 500 })
+						throw new ApiError({ code: streamError.response?.status || 500 })
 					}
 					if (
 						[
@@ -325,10 +325,10 @@ ${this.customInstructions.trim()}
 			throw new Error("Maximum retry attempts reached for context compression")
 		} catch (error) {
 			if (error instanceof Error && error.message === "aborted") {
-				error = new KoduError({ code: 1 })
+				error = new ApiError({ code: 1 })
 			}
 			if (axios.isAxiosError(error)) {
-				error = new KoduError({ code: 1 })
+				error = new ApiError({ code: 1 })
 			}
 			this.handleStreamError(error)
 		} finally {
@@ -345,7 +345,7 @@ ${this.customInstructions.trim()}
 	 * Processes stream chunks from the API response
 	 * @param chunk - SSE response chunk
 	 */
-	private async *processStreamChunk(chunk: koduSSEResponse): AsyncGenerator<koduSSEResponse> {
+	private async *processStreamChunk(chunk: ApiStreamResponse): AsyncGenerator<ApiStreamResponse> {
 		switch (chunk.code) {
 			case 0:
 				break
@@ -361,7 +361,7 @@ ${this.customInstructions.trim()}
 	 * Handles the final response from the API
 	 * @param chunk - Final response chunk
 	 */
-	private async handleFinalResponse(chunk: koduSSEResponse): Promise<void> {
+	private async handleFinalResponse(chunk: ApiStreamResponse): Promise<void> {
 		const provider = this.providerRef.deref()
 		if (!provider) {
 			return
@@ -408,13 +408,13 @@ ${this.customInstructions.trim()}
 	 * @param error - Error from the stream
 	 */
 	private handleStreamError(error: unknown): never {
-		if (error instanceof KoduError) {
+		if (error instanceof ApiError) {
 			console.error("KODU API request failed", error)
 			throw error
 		}
 
 		if (axios.isAxiosError(error)) {
-			throw new KoduError({
+			throw new ApiError({
 				code: error.response?.status || 500,
 			})
 		}

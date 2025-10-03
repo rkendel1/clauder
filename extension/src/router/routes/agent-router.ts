@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { procedure } from "../utils"
 import { router } from "../utils/router"
-import { koduConfig } from "../../api/providers/config/kodu"
+import { anthropicConfig } from "../../api/providers/config/anthropic"
 import { observerHookDefaultPrompt } from "../../agent/v1/hooks/observer-hook"
 import * as vscode from "vscode"
 import {
@@ -85,8 +85,8 @@ const agentRouter = router({
 			const triggerEveryXRequests = 3
 			const pullMessages = 6
 			ctx.provider.getGlobalStateManager().updateGlobalState("observerSettings", {
-				modelId: koduConfig.models[0].id,
-				providerId: koduConfig.id,
+				modelId: anthropicConfig.models[0].id,
+				providerId: anthropicConfig.id,
 				observeEveryXRequests: triggerEveryXRequests,
 				observePullMessages: pullMessages,
 			})

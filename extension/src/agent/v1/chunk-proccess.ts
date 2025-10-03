@@ -1,6 +1,6 @@
-import { koduSSEResponse } from "../../shared/kodu"
+import { ApiStreamResponse } from "../../shared/api-types"
 
-type ChunkCallback = (chunk: koduSSEResponse) => Promise<void>
+type ChunkCallback = (chunk: ApiStreamResponse) => Promise<void>
 
 interface ChunkProcessorCallbacks {
 	onImmediateEndOfStream: ChunkCallback
@@ -14,7 +14,7 @@ interface ChunkProcessorCallbacks {
 
 export class ChunkProcessor {
 	private callbacks: ChunkProcessorCallbacks
-	private chunkQueue: koduSSEResponse[] = []
+	private chunkQueue: ApiStreamResponse[] = []
 	private isProcessing = false
 	private endOfStreamReceived = false
 	private isFirstChunkReceived = false
@@ -23,7 +23,7 @@ export class ChunkProcessor {
 		this.callbacks = callbacks
 	}
 
-	async processStream(stream: AsyncGenerator<koduSSEResponse, any, unknown>) {
+	async processStream(stream: AsyncGenerator<ApiStreamResponse, any, unknown>) {
 		// Call onStreamStart if provided
 
 		for await (const chunk of stream) {
