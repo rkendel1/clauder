@@ -6,3 +6,8 @@ webview-ui-vite/node_modules
 *.vsix
 .env
 .env.local
+# Lock files - support both npm and yarn
+package-lock.json
+yarn.lock
+webview-ui-vite/package-lock.json
+webview-ui-vite/yarn.lock

@@ -380,8 +380,8 @@ export class WebviewManager {
 						break
 					case "autoSummarize":
 						await this.provider.getStateManager().setAutoSummarize(message.bool)
-						if (this.provider.koduDev) {
-							this.provider.koduDev.getStateManager().setAutoSummarize(message.bool)
+						if (this.provider.mainAgent) {
+							this.provider.mainAgent.getStateManager().setAutoSummarize(message.bool)
 						}
 						await this.postBaseStateToWebview()
 						break
@@ -417,7 +417,7 @@ export class WebviewManager {
 							.handleAskResponse(message.askResponse!, message.text, message.images, message.attachements)
 						break
 					case "toggleGitHandler":
-						this.provider.koduDev?.getStateManager().setGitHandlerEnabled(message.enabled)
+						this.provider.mainAgent?.getStateManager().setGitHandlerEnabled(message.enabled)
 						await this.provider.getStateManager().setGitHandlerEnabled(message.enabled)
 						await this.postBaseStateToWebview()
 						break

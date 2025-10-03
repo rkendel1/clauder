@@ -12,7 +12,7 @@ import {
 	AmazonBedrockSettings,
 	OpenAICompatibleSettings,
 } from "extension/api/providers/types"
-import { customProvidersConfigs as providers } from "extension/api/providers/config/index"
+import { providerConfigs as providers } from "extension/api/providers/config/index"
 import { rpcClient } from "@/lib/rpc-client"
 import { useAtom } from "jotai"
 import { createDefaultSettings, providerSettingsAtom, useSwitchView } from "./atoms"

@@ -82,7 +82,7 @@ export class DevServerTool extends BaseAgentTool<ServerRunnerToolParams> {
 	async execute() {
 		const { input, ask, say } = this.params
 		const { commandType, commandToRun, serverName } = input
-		const { terminalManager } = this.koduDev
+		const { terminalManager } = this.mainAgent
 
 		if (!commandType || !serverName) {
 			await say("error", "Missing required parameters 'commandType' or 'serverName'")

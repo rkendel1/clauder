@@ -38,19 +38,19 @@ export interface HookState {
 export abstract class BaseHook {
 	protected hookState: HookState
 	protected _hookOptions: HookOptions
-	protected koduDev: MainAgent
+	protected mainAgent: MainAgent
 
 	get hookOptions(): HookOptions {
 		return this._hookOptions
 	}
 
-	constructor(options: HookOptions, koduDev: MainAgent) {
+	constructor(options: HookOptions, mainAgent: MainAgent) {
 		this._hookOptions = options
-		this.koduDev = koduDev
+		this.mainAgent = mainAgent
 
 		// Initialize hook state
 		this.hookState = {
-			taskId: this.koduDev.getStateManager().state.taskId,
+			taskId: this.mainAgent.getStateManager().state.taskId,
 			requestsSinceLastTrigger: 0,
 			hookName: options.hookName,
 		}

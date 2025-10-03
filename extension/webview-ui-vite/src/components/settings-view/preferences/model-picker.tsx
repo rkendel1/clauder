@@ -268,8 +268,7 @@ export const ModelSelector: FC<ModelSelectorProps> = ({
 									Prices are shown per million tokens
 								</span>
 								<br />
-								{selectedModel.provider !== "kodu" &&
-									!currentModelInfo?.providerData.currentProvider && (
+								{!currentModelInfo?.providerData.currentProvider && (
 										<span
 											onClick={() => {
 												switchToProvider(selectedModel.provider)

@@ -116,7 +116,7 @@ ${this.customInstructions.trim()}
 		postProcessConversationCallback?: (apiConversationHistory: ApiHistoryItem[]) => Promise<void>
 	): AsyncGenerator<ApiStreamResponse> {
 		const provider = this.providerRef.deref()
-		if (!provider || !provider.koduDev) {
+		if (!provider || !provider.mainAgent) {
 			throw new Error("Provider reference has been garbage collected")
 		}
 		// first pull latest api settings
@@ -125,7 +125,7 @@ ${this.customInstructions.trim()}
 		const executeRequest = async ({ shouldResetContext }: { shouldResetContext: boolean }) => {
 			let conversationHistory =
 				apiConversationHistory ??
-				(await provider.koduDev?.getStateManager().apiHistoryManager.getSavedApiConversationHistory())
+				(await provider.mainAgent?.getStateManager().apiHistoryManager.getSavedApiConversationHistory())
 
 			let baseSystem = [await this.getCurrentPrompts()]
 			if (customSystemPrompt?.systemPrompt) {
@@ -172,7 +172,7 @@ ${this.customInstructions.trim()}
 			}
 			if (shouldResetContext) {
 				// Compress the context and retry
-				const result = await manageContextWindow(provider.koduDev!, this.api, (s, msg, ...args) =>
+				const result = await manageContextWindow(provider.mainAgent!, this.api, (s, msg, ...args) =>
 					this.log(s, msg, ...args)
 				)
 				if (result === "chat_finished") {
@@ -181,7 +181,7 @@ ${this.customInstructions.trim()}
 			}
 			// Process conversation history using our external utility
 			if (!skipProcessing) {
-				await processConversationHistory(provider.koduDev!, conversationHistory, criticalMsg, true)
+				await processConversationHistory(provider.mainAgent!, conversationHistory, criticalMsg, true)
 			} else {
 				this.log("info", `Skipping conversation history processing`)
 			}
@@ -386,7 +386,7 @@ ${this.customInstructions.trim()}
 			cacheReadTokens: cache_read_input_tokens,
 			cacheWriteTokens: cache_creation_input_tokens,
 			outputTokens: output_tokens,
-			provider: this.getModelInfo().provider ?? "kodu",
+			provider: this.getModelInfo().provider ?? "anthropic",
 		})
 	}
 

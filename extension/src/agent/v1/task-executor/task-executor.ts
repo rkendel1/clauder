@@ -296,7 +296,7 @@ export class TaskExecutor extends TaskExecutorUtils {
 	public async makeClaudeRequest(): Promise<void> {
 		try {
 			const provider = this.providerRef.deref()
-			if (!provider?.koduDev) {
+			if (!provider?.mainAgent) {
 				return
 			}
 			if (this.pauseNext) {
@@ -339,11 +339,11 @@ export class TaskExecutor extends TaskExecutorUtils {
 			// Execute hooks before making the API request
 			const startedReqId = await this.say("api_req_started")
 			this._currentStreamTs = startedReqId
-			if (provider?.koduDev) {
+			if (provider?.mainAgent) {
 				// mark the task as uncompleted
-				await provider.koduDev.markAsUncompleted()
+				await provider.mainAgent.markAsUncompleted()
 
-				const hookContent = await provider.koduDev.executeHooks()
+				const hookContent = await provider.mainAgent.executeHooks()
 				if (hookContent) {
 					// Add hook content to the user content
 					if (Array.isArray(this.currentUserContent)) {

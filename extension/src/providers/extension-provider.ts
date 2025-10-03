@@ -16,12 +16,12 @@ export class ExtensionProvider implements vscode.WebviewViewProvider {
 	public static readonly tabPanelId = `${extensionName}.TabPanelProvider`
 	private disposables: vscode.Disposable[] = []
 	private view?: vscode.WebviewView | vscode.WebviewPanel
-	private _koduDev?: MainAgent | undefined
-	public get koduDev(): MainAgent | undefined {
-		return this._koduDev
+	private _mainAgent?: MainAgent | undefined
+	public get mainAgent(): MainAgent | undefined {
+		return this._mainAgent
 	}
-	public set koduDev(value: MainAgent | undefined) {
-		this._koduDev = value
+	public set mainAgent(value: MainAgent | undefined) {
+		this._mainAgent = value
 	}
 	private stateManager: ExtensionStateManager
 	private webviewManager: WebviewManager
@@ -95,7 +95,7 @@ export class ExtensionProvider implements vscode.WebviewViewProvider {
 		const state = await this.stateManager.getState()
 		const apiConfiguration = await this.getCurrentApiSettings()
 
-		this.koduDev = new MainAgent({
+		this.mainAgent = new MainAgent({
 			gitHandlerEnabled: state.gitHandlerEnabled,
 			provider: this,
 			apiConfiguration,
@@ -117,7 +117,7 @@ export class ExtensionProvider implements vscode.WebviewViewProvider {
 		const state = await this.stateManager.getState()
 		const apiConfiguration = await this.getCurrentApiSettings()
 
-		this.koduDev = new MainAgent({
+		this.mainAgent = new MainAgent({
 			gitHandlerEnabled: state.gitHandlerEnabled,
 			provider: this,
 			apiConfiguration,
@@ -139,7 +139,7 @@ export class ExtensionProvider implements vscode.WebviewViewProvider {
 		await this.taskManager.clearTask()
 		const state = await this.stateManager.getState()
 		const apiConfiguration = await this.getCurrentApiSettings()
-		this.koduDev = new MainAgent({
+		this.mainAgent = new MainAgent({
 			gitHandlerEnabled: state.gitHandlerEnabled,
 			provider: this,
 			apiConfiguration,
@@ -171,8 +171,13 @@ export class ExtensionProvider implements vscode.WebviewViewProvider {
 		}
 	}
 
+	getMainAgent() {
+		return this.mainAgent
+	}
+
+	// Legacy method for backward compatibility
 	getKoduDev() {
-		return this.koduDev
+		return this.mainAgent
 	}
 
 	getStateManager() {

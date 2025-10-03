@@ -16,7 +16,6 @@ Clauder currently supports the following AI providers:
 - **Google** - Gemini models via Google AI Studio
 - **Mistral** - Mistral AI models
 - **OpenRouter** - Access to 100+ models from various providers
-- **Kodu** - Kodu AI tunnel for Claude models
 
 ### Custom Providers
 
@@ -113,11 +112,6 @@ The plugin-based architecture makes it easy to:
 - Get your API key from [openrouter.ai](https://openrouter.ai)
 - Access: 100+ models from various providers
 - Features: Pay-as-you-go, model comparison
-
-#### Kodu
-- Get your API key from [kodu.ai](https://kodu.ai)
-- Models: Claude models via tunnel
-- Features: Free tier available, no separate Anthropic account needed
 
 #### OpenAI-Compatible
 - Configure any OpenAI-compatible endpoint

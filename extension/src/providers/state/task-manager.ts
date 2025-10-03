@@ -23,7 +23,7 @@ export class TaskManager {
 		const now = new Date()
 		const koduDev = this.provider.getKoduDev()
 
-		this.provider.koduDev = undefined
+		this.provider.mainAgent = undefined
 
 		if (koduDev) {
 			koduDev.abortTask().catch((err) => {

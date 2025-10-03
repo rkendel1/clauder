@@ -157,7 +157,6 @@ export const ObserverAgentCard = () => {
 								</Button>
 							</ModelSelector>
 							{data.observerSettings?.providerId &&
-								data.observerSettings?.providerId !== "kodu" &&
 								!currentModelInfo?.providerData.currentProvider && (
 									<span
 										onClick={() => {
