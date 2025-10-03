@@ -60,11 +60,31 @@ export interface ApiHandler {
 	getModel(): { id: string; info: ModelInfo }
 }
 
+/**
+ * Builds the appropriate API handler based on provider configuration.
+ * 
+ * This function implements a provider-agnostic routing mechanism:
+ * - All providers are treated equally through the ApiHandler interface
+ * - Handler selection is based on technical requirements, not provider preference
+ * - Kodu uses KoduHandler due to its custom streaming protocol implementation
+ * - All other providers use CustomApiHandler which leverages the universal AI SDK
+ * 
+ * Design rationale:
+ * - CustomApiHandler (via Vercel AI SDK) provides consistent behavior for OpenAI-compatible APIs
+ * - KoduHandler demonstrates that custom implementations are supported when technically necessary
+ * - Any provider can use either handler pattern based on technical needs
+ * - The interface contract (ApiHandler) ensures all handlers behave consistently
+ * 
+ * @param configuration - Provider settings and model configuration
+ * @returns An ApiHandler instance (either KoduHandler or CustomApiHandler)
+ */
 export function buildApiHandler(configuration: ApiConstructorOptions): ApiHandler {
-	if (configuration.providerSettings.providerId !== "kodu") {
-		return new CustomApiHandler(configuration)
+	// Use KoduHandler only for the Kodu provider, all others use CustomApiHandler
+	// This maintains backward compatibility while treating Kodu as a regular provider
+	if (configuration.providerSettings.providerId === "kodu") {
+		return new KoduHandler(configuration)
 	}
-	return new KoduHandler(configuration)
+	return new CustomApiHandler(configuration)
 }
 
 export function withoutImageData(

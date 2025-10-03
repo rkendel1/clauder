@@ -11,6 +11,9 @@ Welcome to Claude Coder. Whether you're a developer looking to supercharge your 
 ## 🚀 What's Claude Coder?
 
 Think of Claude Coder as your 24/7 AI-powered Software Developer. It's a VS Code extension that adapts to your skill level, helping you bring ideas to life faster than ever before.
+
+**🎯 Multi-Provider Support**: Choose from multiple AI providers including Anthropic, OpenAI, DeepSeek, Google, Mistral, and more. No vendor lock-in - switch providers seamlessly based on your needs. [Learn more about provider support](PROVIDER-SUPPORT.md)
+
 All you need to is tell Claude what's your task and Claude will take care of it for you, need a website? dashboard? server? design? Claude got it all covered for you.
 
 ### 🌟 Here's what Claude Coder can do for you:
@@ -20,8 +23,9 @@ All you need to is tell Claude what's your task and Claude will take care of it 
 - 🐞 **Intuitive Debugging**: Identify and fix issues quickly, saving you hours of troubleshooting
 - 🚗 **Accelerate Development**: Automate repetitive tasks and generate boilerplate code
 - 📚 **Learn and Grow**: Improve your coding skills with explanations and best practices
-- 🔍 **Search The Web**: Take inspiration from existing content, or ask claude to do it's own research to adapt his knowledge for your needings.
-- 🔍 **Deploy and Publish**: Claude can help you publish your project online, using existings tools without you breaking your head how to get your awesome project online.
+- 🔍 **Search The Web**: Take inspiration from existing content, or ask claude to do it's own research to adapt his knowledge for your needings
+- 🚀 **Deploy and Publish**: Claude can help you publish your project online, using existing tools without you breaking your head how to get your awesome project online
+- 🔄 **Multiple AI Providers**: Switch between Anthropic, OpenAI, DeepSeek, Google, and more - use the best model for each task
 
 ## 🎬 See it in action
 
