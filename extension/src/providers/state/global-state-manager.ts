@@ -7,7 +7,6 @@ import { merge } from "lodash"
 
 type User = {
 	email: string
-	credits: number
 	id: string
 	isVisitor: boolean
 }

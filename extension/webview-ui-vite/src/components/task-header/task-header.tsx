@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils"
 import Thumbnails from "../thumbnails/thumbnails"
 import TaskText from "./task-text"
 import TokenInfo from "./token-info"
-import CreditsInfo from "./credits-info"
 import { useExtensionState } from "@/context/extension-state-context"
 import { useCollapseState } from "@/hooks/use-collapse-state"
 import BugReportDialog from "./bug-report-dialog"
@@ -28,8 +27,6 @@ interface TaskHeaderProps {
 	totalCost: number
 	onClose: () => void
 	isHidden: boolean
-	koduCredits?: number
-	vscodeUriScheme?: string
 	elapsedTime?: number
 	lastMessageAt?: number
 }
@@ -54,8 +51,6 @@ export default function TaskHeader({
 	cacheReads,
 	totalCost,
 	onClose,
-	koduCredits,
-	vscodeUriScheme,
 	elapsedTime,
 	lastMessageAt,
 }: TaskHeaderProps) {
@@ -205,7 +200,6 @@ export default function TaskHeader({
 							</div>
 						)}
 					</div>
-					<CreditsInfo koduCredits={koduCredits} vscodeUriScheme={vscodeUriScheme} />
 				</CollapsibleContent>
 			</Collapsible>
 		</section>

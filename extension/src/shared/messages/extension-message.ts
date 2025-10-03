@@ -103,7 +103,6 @@ export type BaseExtensionMessage = {
 		| "promptEditorButtonTapped"
 		| "didBecomeVisible"
 		| "koduAuthenticated"
-		| "koduCreditsFetched"
 
 	state?: BaseExtensionState
 	images?: string[]

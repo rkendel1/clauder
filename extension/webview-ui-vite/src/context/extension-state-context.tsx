@@ -213,9 +213,6 @@ export const ExtensionStateProvider: React.FC<{ children: React.ReactNode }> = (
 			setThemeName(message.state.themeName)
 			setUriScheme(message.state.uriScheme)
 		}
-		if (message.type === "action" && message.action === "koduCreditsFetched") {
-			setUser(message.user)
-		}
 	}
 
 	useEvent("message", handleMessage)
