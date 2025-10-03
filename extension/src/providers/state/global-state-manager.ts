@@ -16,10 +16,10 @@ const defaults: Partial<GlobalState> = {
 	inlineEditOutputType: "full",
 	autoSummarize: true,
 	gitHandlerEnabled: false,
-	gitCommitterType: "kodu",
+	gitCommitterType: "user",
 	apiConfig: {
-		providerId: "kodu",
-		modelId: "claude-3-7-sonnet-20250219",
+		providerId: "anthropic",
+		modelId: "claude-3-5-sonnet-20241022",
 		koduApiKey: "-",
 	},
 	disabledTools: [],
@@ -32,7 +32,7 @@ export type GlobalState = {
 	customInstructions: string | undefined
 	apiConfig?: Partial<ApiConfiguration>
 	gitHandlerEnabled: boolean | undefined
-	gitCommitterType: "kodu" | "user" | undefined
+	gitCommitterType: "user" | undefined
 	readFileMaxLines: number | undefined
 	alwaysAllowReadOnly: boolean | undefined
 	alwaysAllowWriteOnly: boolean | undefined

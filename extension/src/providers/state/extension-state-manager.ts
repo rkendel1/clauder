@@ -33,7 +33,6 @@ export class ExtensionStateManager {
 			inlineEditOutputType,
 			observerSettings,
 			apiConfig,
-			koduApiKey,
 			gitCommitterType,
 		] = await Promise.all([
 			this.globalStateManager.getGlobalState("user"),
@@ -161,8 +160,6 @@ export class ExtensionStateManager {
 	async setSkipWriteAnimation(value: boolean) {
 		this.context.getKoduDev()?.getStateManager()?.setSkipWriteAnimation(value)
 		return this.globalStateManager.updateGlobalState("skipWriteAnimation", value)
-	}
-}
 	}
 
 	setCustomInstructions(value: string | undefined) {

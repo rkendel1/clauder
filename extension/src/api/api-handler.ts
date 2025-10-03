@@ -374,11 +374,6 @@ ${this.customInstructions.trim()}
 		const { input_tokens, output_tokens } = response.usage
 		const { cache_creation_input_tokens, cache_read_input_tokens } = response.usage as any
 
-		// Update credits if provided
-		if (chunk.body.internal.userCredits !== undefined) {
-			await provider.getStateManager()?.updateKoduCredits(chunk.body.internal.userCredits)
-		}
-
 		// Track metrics
 		const state = await provider.getState()
 		this.log("info", `API REQUEST FINISHED: ${apiCost} tokens used data:`, response)
