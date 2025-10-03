@@ -138,16 +138,8 @@ export class AmplitudeTracker {
 		this.track("ReferralProgramClick")
 	}
 
-	public addCreditsClick(): void {
-		this.track("ExtensionCreditAddOpen")
-	}
-
 	public trialOfferView(): void {
 		this.track("TrialOfferView")
-	}
-
-	public offerwallView(): void {
-		this.track("OfferwallView")
 	}
 
 	public trialOfferStart(): void {
@@ -164,12 +156,6 @@ export class AmplitudeTracker {
 
 	public trialUpsellSuccess(): void {
 		this.track("TrialUpsellSuccess")
-	}
-
-	public extensionCreditAddSelect(key: string): void {
-		this.track("ExtensionCreditAddSelect", {
-			key,
-		})
 	}
 
 	private async track(eventType: string, eventProperties?: object, userProperties?: object): Promise<void> {

@@ -11,13 +11,10 @@ export type AmplitudeWebviewMessage = {
 	event_type:
 		| "AuthStart"
 		| "ReferralProgram"
-		| "ExtensionCreditAddOpen"
 		| "TrialOfferView"
 		| "TrialOfferStart"
 		| "TrialUpsellView"
 		| "TrialUpsellStart"
-		| "ExtensionCreditAddSelect"
-		| "OfferwallView"
 	key?: string
 }
 
@@ -154,7 +151,7 @@ export type PromptActions =
 
 export type ActionMessage = {
 	type: "action"
-	action: "didBecomeVisible" | "koduAuthenticated" | "koduCreditsFetched"
+	action: "didBecomeVisible" | "koduAuthenticated"
 	text?: string
 	state?: BaseExtensionState
 }

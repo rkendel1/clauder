@@ -2,9 +2,7 @@ import React from "react"
 import { Button } from "@/components/ui/button"
 import { useExtensionState } from "../../context/extension-state-context"
 import { vscode } from "@/utils/vscode"
-import { formatPrice } from "./utils"
-import { getKoduAddCreditsUrl, getKoduOfferUrl, getKoduSignInUrl } from "extension/shared/kodu"
-import { GiftIcon, KeyIcon } from "lucide-react"
+import { getKoduSignInUrl } from "extension/shared/kodu"
 
 const UserInfoSection: React.FC = () => {
 	const extensionState = useExtensionState()
@@ -52,32 +50,6 @@ const UserInfoSection: React.FC = () => {
 						sign out
 					</Button>
 				</div>
-				<div className="max-[280px]:mt-2">
-					<p className="text-xs font-medium">Kodu Credits remaining</p>
-					<p className="text-lg font-bold">{formatPrice(extensionState.user?.credits || 0)}</p>
-				</div>
-			</div>
-			<div className="flex gap-2 flex-wrap">
-				<Button
-					onClick={() => {
-						vscode.postTrackingEvent("ExtensionCreditAddOpen")
-						vscode.postTrackingEvent("ExtensionCreditAddSelect", "purchase")
-					}}
-					asChild>
-					<a href={getKoduAddCreditsUrl(extensionState.uriScheme)}>Add Credits</a>
-				</Button>
-				<Button
-					onClick={() => {
-						vscode.postTrackingEvent("OfferwallView")
-						vscode.postTrackingEvent("ExtensionCreditAddSelect", "offerwall")
-					}}
-					variant={"outline"}
-					asChild>
-					<a href={getKoduOfferUrl(extensionState.uriScheme)}>
-						<GiftIcon className="size-4 mr-1" />
-						$10 Free Credits
-					</a>
-				</Button>
 			</div>
 		</>
 	)

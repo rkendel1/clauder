@@ -314,8 +314,6 @@ const ChatView: React.FC<ChatViewProps> = ({
 								onClose={() => vscode.postMessage({ type: "clearTask" })}
 								isHidden={isHidden}
 								lastMessageAt={currentTask.ts}
-								koduCredits={user?.credits ?? 0}
-								vscodeUriScheme={uriScheme}
 							/>
 							<ChatMessages
 								key={`messages-${firstTaskMsg.ts}`}

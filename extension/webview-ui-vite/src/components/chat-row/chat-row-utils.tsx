@@ -1,4 +1,4 @@
-import { AlertCircle, LogIn, CreditCard, CircleX, X, ChevronDown, ChevronRight, Settings, Gift } from "lucide-react"
+import { AlertCircle, LogIn, CircleX, X, ChevronDown, ChevronRight, Settings } from "lucide-react"
 import { loginKodu } from "@/utils/kodu-links"
 import { useExtensionState } from "@/context/extension-state-context"
 
@@ -14,7 +14,6 @@ function formatElapsedTime(ms: number): string {
 }
 import { useCollapseState } from "@/hooks/use-collapse-state"
 import { vscode } from "@/utils/vscode"
-import { getKoduAddCreditsUrl, getKoduOfferUrl } from "extension/shared/kodu"
 import { TextWithAttachments } from "@/utils/extract-attachments"
 import { SyntaxHighlighterStyle } from "@/utils/get-syntax-highlighter-style-from-theme"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
@@ -375,42 +374,13 @@ export function ErrorMsgComponent({ type }: { type: "unauthorized" | "payment_re
 					: "You have run out of credits. Please contact your administrator."}
 			</p>
 			<div className="flex flex-col gap-2 mt-3">
-				{type === "unauthorized" ? (
-					<button className={buttonStyles}>
-						<span
-							onClick={() => loginKodu({ uriScheme: uriScheme!, extensionName: extensionName! })}
-							className="flex items-center justify-center">
-							<LogIn className="mr-2 h-3 w-3" /> Log In
-						</span>
-					</button>
-				) : (
-					<>
-						<button className={buttonStyles}>
-							<a className="!text-foreground" href={getKoduOfferUrl(uriScheme)}>
-								<span
-									onClick={() => {
-										vscode.postTrackingEvent("OfferwallView")
-										vscode.postTrackingEvent("ExtensionCreditAddSelect", "offerwall")
-									}}
-									className="flex items-center justify-center">
-									<Gift className="mr-2 h-3 w-3" /> FREE Credits
-								</span>
-							</a>
-						</button>
-						<button className={buttonStyles}>
-							<a className="!text-foreground" href={getKoduAddCreditsUrl(uriScheme)}>
-								<span
-									onClick={() => {
-										vscode.postTrackingEvent("ExtensionCreditAddOpen")
-										vscode.postTrackingEvent("ExtensionCreditAddSelect", "purchase")
-									}}
-									className="flex items-center justify-center">
-									<CreditCard className="mr-2 h-3 w-3" /> Buy Credits
-								</span>
-							</a>
-						</button>
-					</>
-				)}
+				<button className={buttonStyles}>
+					<span
+						onClick={() => loginKodu({ uriScheme: uriScheme!, extensionName: extensionName! })}
+						className="flex items-center justify-center">
+						<LogIn className="mr-2 h-3 w-3" /> Log In
+					</span>
+				</button>
 			</div>
 		</div>
 	)
