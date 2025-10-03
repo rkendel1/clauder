@@ -121,8 +121,8 @@ export type CheckpointEntry = {
 	taskId: string
 	agentId: number
 	agentState?: SubAgentState
-	content: KoduAgentState["apiConversationHistory"][number]
-	errorHistory: KoduAgentState["historyErrors"]
+	content: AgentState["apiConversationHistory"][number]
+	errorHistory: AgentState["historyErrors"]
 }
 
 export type Checkpoint = {
@@ -130,7 +130,7 @@ export type Checkpoint = {
 	enteries: CheckpointEntry[]
 }
 
-export interface KoduAgentState {
+export interface AgentState {
 	taskId: string
 	apiConversationHistory: ApiHistoryItem[]
 	claudeMessages: ClaudeMessage[]

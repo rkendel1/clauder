@@ -12,34 +12,27 @@ export type GitCommitResult = {
 
 export class GitHandler {
 	private repoPath: string | undefined
-	private readonly KODU_USER_NAME = "kodu-ai"
-	private readonly KODU_USER_EMAIL = "bot@kodu.ai"
+	private readonly FALLBACK_USER_NAME = "ai-assistant"
+	private readonly FALLBACK_USER_EMAIL = "assistant@localhost"
 
 	constructor(repoPath: string) {
 		this.repoPath = repoPath
 	}
 
 	private async getCommitterInfo(): Promise<{ name: string; email: string }> {
-		const committerType = GlobalStateManager.getInstance().getGlobalState("gitCommitterType") ?? "kodu"
+		const committerType = GlobalStateManager.getInstance().getGlobalState("gitCommitterType") ?? "user"
 
-		if (committerType === "kodu") {
-			return {
-				name: this.KODU_USER_NAME,
-				email: this.KODU_USER_EMAIL,
-			}
-		}
-
-		// Use git config to get user's name and email
+		// Always try to use user's git config first
 		try {
 			const name = (await this.getLocalConfigValue("user.name")) || (await this.getGlobalConfigValue("user.name"))
 			const email =
 				(await this.getLocalConfigValue("user.email")) || (await this.getGlobalConfigValue("user.email"))
 
 			if (!name || !email) {
-				console.log("User git config not found, falling back to kodu")
+				console.log("User git config not found, using fallback")
 				return {
-					name: this.KODU_USER_NAME,
-					email: this.KODU_USER_EMAIL,
+					name: this.FALLBACK_USER_NAME,
+					email: this.FALLBACK_USER_EMAIL,
 				}
 			}
 
@@ -47,8 +40,8 @@ export class GitHandler {
 		} catch (error) {
 			console.error("Error getting user git config:", error)
 			return {
-				name: this.KODU_USER_NAME,
-				email: this.KODU_USER_EMAIL,
+				name: this.FALLBACK_USER_NAME,
+				email: this.FALLBACK_USER_EMAIL,
 			}
 		}
 	}
