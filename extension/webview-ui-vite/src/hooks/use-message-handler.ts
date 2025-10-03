@@ -274,8 +274,6 @@ export const useChatMessageHandling = (
 					claudeAsk: undefined,
 					enableButtons: false,
 				},
-				payment_required: reset,
-				unauthorized: reset,
 				custom_provider_error: reset,
 			}
 
