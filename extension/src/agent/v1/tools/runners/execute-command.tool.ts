@@ -59,7 +59,7 @@ export class ExecuteCommandTool extends BaseAgentTool<ExecuteCommandToolParams> 
 	}
 
 	private async executeShellTerminal(command: string): Promise<ToolResponseV2> {
-		const { terminalManager } = this.koduDev
+		const { terminalManager } = this.mainAgent
 		if (!(terminalManager instanceof AdvancedTerminalManager)) {
 			throw new Error("AdvancedTerminalManager is not available")
 		}
@@ -140,7 +140,7 @@ export class ExecuteCommandTool extends BaseAgentTool<ExecuteCommandToolParams> 
 
 		let preCommandCommit = ""
 		// try {
-		// 	const commitResult = await this.koduDev.gitHandler.commitEverything(
+		// 	const commitResult = await this.mainAgent.gitHandler.commitEverything(
 		// 		`State before executing command \`${command}\``
 		// 	)
 		// 	preCommandCommit = commitResult.commitHash
@@ -149,7 +149,7 @@ export class ExecuteCommandTool extends BaseAgentTool<ExecuteCommandToolParams> 
 		// }
 
 		process = terminalManager.runCommand(terminalInfo, command, {
-			autoClose: this.koduDev.getStateManager().autoCloseTerminal ?? false,
+			autoClose: this.mainAgent.getStateManager().autoCloseTerminal ?? false,
 		})
 
 		if (!process) {
@@ -278,7 +278,7 @@ export class ExecuteCommandTool extends BaseAgentTool<ExecuteCommandToolParams> 
 				)
 
 				// try {
-				// 	commitResult = await this.koduDev.gitHandler.commitEverything(
+				// 	commitResult = await this.mainAgent.gitHandler.commitEverything(
 				// 		`State after executing command \`${command}\``
 				// 	)
 				// } catch (error) {

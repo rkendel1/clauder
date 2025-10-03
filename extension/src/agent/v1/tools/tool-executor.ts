@@ -73,7 +73,7 @@ export class ToolExecutor {
 	 */
 	constructor(options: AgentToolOptions) {
 		this.cwd = options.cwd
-		this.koduDev = options.koduDev
+		this.mainAgent = options.koduDev
 		this.queue = new PQueue({ concurrency: 1 })
 
 		this.toolParser = new ToolParser(
@@ -93,11 +93,11 @@ export class ToolExecutor {
 	public get options(): AgentToolOptions {
 		return {
 			cwd: this.cwd,
-			alwaysAllowReadOnly: this.koduDev.getStateManager().alwaysAllowReadOnly,
-			alwaysAllowWriteOnly: this.koduDev.getStateManager().alwaysAllowWriteOnly,
-			koduDev: this.koduDev,
+			alwaysAllowReadOnly: this.mainAgent.getStateManager().alwaysAllowReadOnly,
+			alwaysAllowWriteOnly: this.mainAgent.getStateManager().alwaysAllowWriteOnly,
+			koduDev: this.mainAgent,
 			setRunningProcessId: this.setRunningProcessId.bind(this),
-			agentName: this.koduDev.getStateManager().subAgentManager.state?.name,
+			agentName: this.mainAgent.getStateManager().subAgentManager.state?.name,
 		}
 	}
 
@@ -263,9 +263,9 @@ export class ToolExecutor {
 				ts,
 				isFinal: false,
 				isLastWriteToFile: false,
-				ask: this.koduDev.taskExecutor.ask.bind(this.koduDev.taskExecutor),
-				say: this.koduDev.taskExecutor.say.bind(this.koduDev.taskExecutor),
-				updateAsk: this.koduDev.taskExecutor.updateAsk.bind(this.koduDev.taskExecutor),
+				ask: this.mainAgent.taskExecutor.ask.bind(this.mainAgent.taskExecutor),
+				say: this.mainAgent.taskExecutor.say.bind(this.mainAgent.taskExecutor),
+				updateAsk: this.mainAgent.taskExecutor.updateAsk.bind(this.mainAgent.taskExecutor),
 			})
 
 			context = { id, tool, status: "pending" }
@@ -313,9 +313,9 @@ export class ToolExecutor {
 				ts: Date.now(),
 				isFinal: true,
 				isLastWriteToFile: false,
-				ask: this.koduDev.taskExecutor.ask.bind(this.koduDev.taskExecutor),
-				say: this.koduDev.taskExecutor.say.bind(this.koduDev.taskExecutor),
-				updateAsk: this.koduDev.taskExecutor.updateAsk.bind(this.koduDev.taskExecutor),
+				ask: this.mainAgent.taskExecutor.ask.bind(this.mainAgent.taskExecutor),
+				say: this.mainAgent.taskExecutor.say.bind(this.mainAgent.taskExecutor),
+				updateAsk: this.mainAgent.taskExecutor.updateAsk.bind(this.mainAgent.taskExecutor),
 			})
 
 			context = { id, tool, status: "pending" }
@@ -350,7 +350,7 @@ export class ToolExecutor {
 
 		await context?.tool.abortToolExecution()
 
-		await this.koduDev.taskExecutor.updateAsk(
+		await this.mainAgent.taskExecutor.updateAsk(
 			"tool",
 			{
 				tool: {
@@ -372,12 +372,12 @@ export class ToolExecutor {
 	 * @param ts Timestamp of the update
 	 */
 	private async updateToolStatus(context: ToolContext, params: any, ts: number) {
-		await this.koduDev.taskExecutor.updateAsk(
+		await this.mainAgent.taskExecutor.updateAsk(
 			"tool",
 			{
 				tool: {
 					tool: context.tool.name,
-					agentName: this.koduDev.getStateManager().subAgentManager.state?.name,
+					agentName: this.mainAgent.getStateManager().subAgentManager.state?.name,
 					...params,
 					ts,
 					approvalState: "loading",
@@ -416,9 +416,9 @@ export class ToolExecutor {
 				ts: context.tool.ts,
 				isFinal: true,
 				isLastWriteToFile: false,
-				ask: this.koduDev.taskExecutor.ask.bind(this.koduDev.taskExecutor),
-				say: this.koduDev.taskExecutor.say.bind(this.koduDev.taskExecutor),
-				updateAsk: this.koduDev.taskExecutor.updateAsk.bind(this.koduDev.taskExecutor),
+				ask: this.mainAgent.taskExecutor.ask.bind(this.mainAgent.taskExecutor),
+				say: this.mainAgent.taskExecutor.say.bind(this.mainAgent.taskExecutor),
+				updateAsk: this.mainAgent.taskExecutor.updateAsk.bind(this.mainAgent.taskExecutor),
 			})
 
 			this.toolResults.push({ name: context.tool.name, result })
@@ -428,7 +428,7 @@ export class ToolExecutor {
 			console.error(`Error executing tool: ${context.tool.name}`, error)
 			context.status = "error"
 			context.error = error as Error
-			await this.koduDev.taskExecutor.partialUpdateTool(
+			await this.mainAgent.taskExecutor.partialUpdateTool(
 				{
 					ts: context.tool.ts,
 					approvalState: "error",

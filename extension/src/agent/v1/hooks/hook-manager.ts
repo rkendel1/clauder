@@ -9,7 +9,7 @@ export class HookManager {
 	private koduDev: MainAgent
 
 	constructor(koduDev: MainAgent) {
-		this.koduDev = koduDev
+		this.mainAgent = koduDev
 	}
 
 	/**
@@ -19,7 +19,7 @@ export class HookManager {
 		HookClass: new (options: HookOptions, koduDev: MainAgent) => T,
 		options: HookOptions
 	): T {
-		const hook = new HookClass(options, this.koduDev)
+		const hook = new HookClass(options, this.mainAgent)
 		this.hooks.push(hook)
 		return hook
 	}

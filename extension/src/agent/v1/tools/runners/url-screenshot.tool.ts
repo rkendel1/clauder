@@ -100,7 +100,7 @@ export class UrlScreenshotTool extends BaseAgentTool<UrlScreenshotToolParams> {
 				throw new Error("Tool execution was aborted")
 			}
 
-			const browserManager = this.koduDev.browserManager
+			const browserManager = this.mainAgent.browserManager
 			await browserManager.launchBrowser()
 
 			// Check if aborted before screenshot
@@ -173,7 +173,7 @@ export class UrlScreenshotTool extends BaseAgentTool<UrlScreenshotToolParams> {
 
 	private async cleanup() {
 		try {
-			await this.koduDev.browserManager.closeBrowser()
+			await this.mainAgent.browserManager.closeBrowser()
 		} catch (err) {
 			console.error("Error during cleanup:", err)
 		}

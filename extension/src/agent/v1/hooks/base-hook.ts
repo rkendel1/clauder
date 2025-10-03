@@ -46,11 +46,11 @@ export abstract class BaseHook {
 
 	constructor(options: HookOptions, koduDev: MainAgent) {
 		this._hookOptions = options
-		this.koduDev = koduDev
+		this.mainAgent = koduDev
 
 		// Initialize hook state
 		this.hookState = {
-			taskId: this.koduDev.getStateManager().state.taskId,
+			taskId: this.mainAgent.getStateManager().state.taskId,
 			requestsSinceLastTrigger: 0,
 			hookName: options.hookName,
 		}

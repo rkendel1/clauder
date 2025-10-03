@@ -49,10 +49,10 @@ export class AttemptCompletionTool extends BaseAgentTool<AttemptCompletionToolPa
 			true
 		)
 		if (response === "yesButtonTapped") {
-			await this.koduDev.providerRef
+			await this.mainAgent.providerRef
 				.deref()
 				?.getTaskManager()
-				?.markTaskAsCompleted(this.koduDev.getStateManager().taskId, {
+				?.markTaskAsCompleted(this.mainAgent.getStateManager().taskId, {
 					manual: true,
 				})
 

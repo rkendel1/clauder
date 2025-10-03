@@ -12,8 +12,8 @@ import { isToolResponseV2, parseToolResponse } from "../../shared/format-tools"
 import { ApiHandler } from "../../api"
 import { ToolName } from "../../agent/v1/tools/types"
 
-const KODU_DIFF = "kodu_diff" as const
-const KODU_CONTENT = "kodu_content" as const
+const DIFF_TAG = "diff" as const
+const CONTENT_TAG = "content" as const
 
 const logger = (msg: string, level: "info" | "warn" | "error" | "debug") => {
 	console[level](`[CompressToolFromMsg] ${msg}`)
@@ -307,8 +307,8 @@ const processContentBlock = async (
 	}
 
 	// Handle write_to_file compression
-	if ((content.text.includes("</write_to_file>") || content.text.includes(`</${KODU_CONTENT}>`)) && !isToolResponse) {
-		const koduContentType = content.text.includes(`</${KODU_CONTENT}>`) ? KODU_CONTENT : "content"
+	if ((content.text.includes("</write_to_file>") || content.text.includes(`</${CONTENT_TAG}>`)) && !isToolResponse) {
+		const koduContentType = content.text.includes(`</${CONTENT_TAG}>`) ? CONTENT_TAG : "content"
 		const contentStart = content.text.indexOf(`<${koduContentType}>`)
 		const contentEnd = content.text.indexOf(`</${koduContentType}>`)
 
@@ -341,25 +341,25 @@ const processContentBlock = async (
 	}
 
 	// Handle edit_file_blocks compression
-	if (content.text.includes(`<${KODU_DIFF}>`) && content.text.includes(`</${KODU_DIFF}>`) && !isToolResponse) {
-		const koduDiffStart = content.text.indexOf(`<${KODU_DIFF}>`)
-		const koduDiffEnd = content.text.indexOf(`</${KODU_DIFF}>`)
+	if (content.text.includes(`<${DIFF_TAG}>`) && content.text.includes(`</${DIFF_TAG}>`) && !isToolResponse) {
+		const koduDiffStart = content.text.indexOf(`<${DIFF_TAG}>`)
+		const koduDiffEnd = content.text.indexOf(`</${DIFF_TAG}>`)
 
 		if (koduDiffStart !== -1 && koduDiffEnd !== -1) {
 			const textBeforeContent = content.text.slice(0, koduDiffStart)
-			const textAfterContent = content.text.slice(koduDiffEnd + `</${KODU_DIFF}>`.length)
-			const fullContent = content.text.slice(koduDiffStart + `<${KODU_DIFF}>`.length, koduDiffEnd)
+			const textAfterContent = content.text.slice(koduDiffEnd + `</${DIFF_TAG}>`.length)
+			const fullContent = content.text.slice(koduDiffStart + `<${DIFF_TAG}>`.length, koduDiffEnd)
 
 			// Log extracted content for debugging
-			logger(`Extracted ${KODU_DIFF} content: "${fullContent}"`, "debug")
+			logger(`Extracted ${DIFF_TAG} content: "${fullContent}"`, "debug")
 
 			// Count SEARCH and REPLACE blocks
 			const searchCount = (fullContent.match(/SEARCH/g) || []).length
 			const replaceCount = (fullContent.match(/REPLACE/g) || []).length
 
-			const truncatedContent = `<${KODU_DIFF}>Compressed diff with ${searchCount} SEARCH/REPLACE blocks</${KODU_DIFF}>`
+			const truncatedContent = `<${DIFF_TAG}>Compressed diff with ${searchCount} SEARCH/REPLACE blocks</${DIFF_TAG}>`
 			logger(
-				`Compressed ${KODU_DIFF}: original length: ${fullContent.length}, SEARCH: ${searchCount}, REPLACE: ${replaceCount}`,
+				`Compressed ${DIFF_TAG}: original length: ${fullContent.length}, SEARCH: ${searchCount}, REPLACE: ${replaceCount}`,
 				"info"
 			)
 
@@ -368,7 +368,7 @@ const processContentBlock = async (
 				text: textBeforeContent + truncatedContent + textAfterContent,
 			}
 		} else {
-			logger(`Failed to detect ${KODU_DIFF} boundaries, skipping compression`, "warn")
+			logger(`Failed to detect ${DIFF_TAG} boundaries, skipping compression`, "warn")
 		}
 	}
 

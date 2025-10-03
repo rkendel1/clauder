@@ -81,14 +81,8 @@ const AdvancedTab: React.FC = () => {
 							<Label className="text-xs font-medium">Git Committer</Label>
 							<RadioGroup
 								value={gitCommitterType}
-								onValueChange={(value) => handleSetGitCommitterType(value as "kodu" | "user")}
+								onValueChange={(value) => handleSetGitCommitterType(value as "user")}
 								className="flex flex-col space-y-1">
-								<div className="flex items-center space-x-2">
-									<RadioGroupItem value="kodu" id="kodu" />
-									<Label htmlFor="kodu" className="text-sm">
-										Kodu AI
-									</Label>
-								</div>
 								<div className="flex items-center space-x-2">
 									<RadioGroupItem value="user" id="user" />
 									<Label htmlFor="user" className="text-sm">
@@ -97,7 +91,7 @@ const AdvancedTab: React.FC = () => {
 								</div>
 							</RadioGroup>
 							<p className="text-[10px] text-muted-foreground">
-								Choose who should be credited for git commits
+								Git commits will be credited to your user profile
 							</p>
 						</div>
 					)}

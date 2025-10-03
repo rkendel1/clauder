@@ -47,7 +47,7 @@ export class FileEditorTool extends BaseAgentTool<FileEditorToolParams> {
 		this.diffViewProvider = new DiffViewProvider(getCwd())
 		this.inlineEditor = new InlineEditHandler()
 		this.diffBlockManager = new DiffBlockManager()
-		if (!!this.koduDev.getStateManager().skipWriteAnimation) {
+		if (!!this.mainAgent.getStateManager().skipWriteAnimation) {
 			this.skipWriteAnimation = true
 		}
 	}
@@ -394,7 +394,7 @@ ${REPLACE_HEAD}
 		}
 		const { finalContent, results, finalContentRaw } = await this.inlineEditor.saveChanges()
 
-		this.koduDev.getStateManager().addErrorPath(path)
+		this.mainAgent.getStateManager().addErrorPath(path)
 
 		const notAppliedCount = results.filter((result) => !result.wasApplied).length
 		const validationMsg =
@@ -405,7 +405,7 @@ ${REPLACE_HEAD}
 		let commitXmlInfo = ""
 		let commitResult: GitCommitResult | undefined
 		try {
-			commitResult = await this.koduDev.gitHandler.commitOnFileWrite(path, this.params.input.commit_message)
+			commitResult = await this.mainAgent.gitHandler.commitOnFileWrite(path, this.params.input.commit_message)
 			commitXmlInfo = this.commitXMLGenerator(commitResult)
 		} catch (error) {
 			this.logger(`Error committing changes: ${error}`, "error")
@@ -434,7 +434,7 @@ ${REPLACE_HEAD}
 			this.ts
 		)
 
-		const currentOutputMode = this.koduDev.getStateManager().inlineEditOutputType
+		const currentOutputMode = this.mainAgent.getStateManager().inlineEditOutputType
 		if (currentOutputMode === "diff") {
 			return this.toolResponse(
 				"success",
@@ -565,12 +565,12 @@ ${finalContent}
 		this.logger(`User approved to write to file: ${relPath}`, "info")
 		const { userEdits, finalContent } = await this.diffViewProvider.saveChanges()
 		this.logger(`Changes saved to file: ${relPath}`, "info")
-		this.koduDev.getStateManager().addErrorPath(relPath)
+		this.mainAgent.getStateManager().addErrorPath(relPath)
 
 		let commitXmlInfo = ""
 		let commitResult: GitCommitResult | undefined
 		try {
-			commitResult = await this.koduDev.gitHandler.commitOnFileWrite(relPath, this.params.input.commit_message)
+			commitResult = await this.mainAgent.gitHandler.commitOnFileWrite(relPath, this.params.input.commit_message)
 			commitXmlInfo = this.commitXMLGenerator(commitResult)
 		} catch (error) {
 			this.logger(`Error committing changes: ${error}`, "error")
@@ -704,7 +704,7 @@ ${commitXmlInfo}`
 	 * Saves a new file version after changes are made to the file.
 	 */
 	private async saveNewFileVersion(relPath: string, content: string): Promise<FileVersion> {
-		const versions = await this.koduDev.getStateManager().getFileVersions(relPath)
+		const versions = await this.mainAgent.getStateManager().getFileVersions(relPath)
 		// if we don't have any versions we only need to save the original content as the first version of the file
 		if (versions.length === 0) {
 			const newVersion: FileVersion = {
@@ -713,7 +713,7 @@ ${commitXmlInfo}`
 				createdAt: Date.now(),
 				content: this.fileState?.orignalContent ?? "",
 			}
-			await this.koduDev.getStateManager().saveFileVersion(newVersion)
+			await this.mainAgent.getStateManager().saveFileVersion(newVersion)
 			return newVersion
 		}
 		const nextVersion = versions.length > 0 ? Math.max(...versions.map((v) => v.version)) + 1 : 1
@@ -723,14 +723,14 @@ ${commitXmlInfo}`
 			createdAt: Date.now(),
 			content,
 		}
-		await this.koduDev.getStateManager().saveFileVersion(newVersion)
+		await this.mainAgent.getStateManager().saveFileVersion(newVersion)
 		return newVersion
 	}
 
 	private async handleRollback(relPath: string): Promise<ToolResponseV2> {
 		const mode = "rollback"
 
-		const versions = await this.koduDev.getStateManager().getFileVersions(relPath)
+		const versions = await this.mainAgent.getStateManager().getFileVersions(relPath)
 		const versionToRollback = versions.at(-1)
 		if (!versionToRollback) {
 			return this.toolResponse(
@@ -813,16 +813,16 @@ ${commitXmlInfo}`
 			await unlink(absolutePath)
 		} else {
 			// we want to add it to error paths if it's not empty and delete
-			this.koduDev.getStateManager().addErrorPath(relPath)
+			this.mainAgent.getStateManager().addErrorPath(relPath)
 		}
 		let commitXmlInfo = ""
 		let commitResult: GitCommitResult | undefined
 		try {
-			commitResult = await this.koduDev.gitHandler.commitOnFileWrite(relPath, this.params.input.commit_message)
+			commitResult = await this.mainAgent.gitHandler.commitOnFileWrite(relPath, this.params.input.commit_message)
 			commitXmlInfo = this.commitXMLGenerator(commitResult)
 		} catch {}
 
-		await this.koduDev.getStateManager().deleteFileVersion(versionToRollback)
+		await this.mainAgent.getStateManager().deleteFileVersion(versionToRollback)
 
 		this.params.updateAsk(
 			"tool",

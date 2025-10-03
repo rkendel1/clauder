@@ -80,7 +80,7 @@ export type AgentToolOptions = {
 	cwd: string
 	alwaysAllowReadOnly: boolean
 	alwaysAllowWriteOnly: boolean
-	koduDev: MainAgent
+	mainAgent: MainAgent
 	setRunningProcessId?: (pid: number | undefined) => void
 	agentName?: SpawnAgentOptions
 }
