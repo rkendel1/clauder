@@ -3,13 +3,24 @@ import { procedure } from "../utils"
 import { router } from "../utils/router"
 import { SecretStateManager } from "../../providers/state/secret-state-manager"
 import { nanoid } from "nanoid"
-import { models, providerConfigs, customProvidersConfigs } from "../../api/providers/config"
+import { models, providerConfigs } from "../../api/providers/config"
 import { GlobalState, GlobalStateManager } from "../../providers/state/global-state-manager"
 import { ProviderId } from "../../api/providers/constants"
 import { ApiConstructorOptions, ProviderSettings, providerSettingsSchema } from "../../api"
 import { OpenAICompatibleSettings, ProviderConfig } from "../../api/providers/types"
 import { openRouterConfig } from "../../api/providers/config/openrouter"
 
+/**
+ * Retrieves provider configuration by ID.
+ * 
+ * Provider-agnostic design:
+ * - All providers are stored in the same unified providers array
+ * - Kodu fallback to config is for backward compatibility only
+ * - No special treatment in the core logic
+ * 
+ * @param id - Provider ID
+ * @returns Provider configuration if found
+ */
 export async function getProvider(id: string) {
 	// Try to get from providers array first
 	const providersString = await SecretStateManager.getInstance().getSecretState("providers")
@@ -44,6 +55,18 @@ function openaiCompatibleModel(p: OpenAICompatibleSettings) {
 	} satisfies ProviderConfig["models"][number]
 }
 
+/**
+ * Retrieves model and provider data for a given provider ID.
+ * 
+ * Universal provider support:
+ * - First checks unified providers array (modern approach)
+ * - Falls back to legacy storage (koduApiKey) for backward compatibility
+ * - Handles dynamic model loading (e.g., OpenRouter)
+ * - No architectural distinction between providers
+ * 
+ * @param providerId - Provider identifier
+ * @returns Provider data including models and settings
+ */
 export async function getModelProviderData(providerId: string) {
 	// First, try to get provider from the unified providers array
 	const providersData = await SecretStateManager.getInstance().getSecretState("providers")
