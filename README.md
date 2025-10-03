@@ -4,8 +4,6 @@
 
 # 👋 Hey there !
 
-<img src="./extension/assets/kodu.png" width="100" align="right" alt="Kuhmpel Logo" />
-
 Welcome to Kuhmpel. Whether you're a developer looking to supercharge your workflow, or someone with a brilliant idea but limited coding experience, you're in the right place. I created this tool to bridge the gap between imagination and implementation, making coding more accessible and efficient for everyone.
 
 ## 🚀 What's Kuhmpel?
@@ -84,16 +82,43 @@ Whether you're crafting your first "Hello, World!" or architecting complex syste
 
 If you're a developer and want to help make Kuhmpel even better, here's how:
 
-1. Clone the repo: `git clone https://github.com/rkendel1/kuhmpel.git`
-2. Open in VS Code: `code kuhmpel`
+### Prerequisites
+- Node.js 20.x or later
+- npm (comes with Node.js)
+- Git
+
+### Quick Start
+
+1. Clone the repo: `git clone https://github.com/rkendel1/clauder.git`
+2. Open in VS Code: `code clauder`
 3. Navigate to extension folder: `cd extension`
-4. Install dependencies: `npm run install:all`
-5. Run with `F5`
+4. Install all dependencies: `npm run install:all`
+   - This installs dependencies for both the extension and the webview UI
+5. Press `F5` to run the extension in development mode
 
-Pro tips:
+### Development Tips
 
-- Webview hot-reloads, but might need an occasional extension host reload
-- Extension host changes need a full reload (Cmd/Ctrl + R)
+- **Webview changes**: The webview UI hot-reloads automatically during development
+- **Extension changes**: Reload the extension host (Cmd/Ctrl + R) to see changes
+- **Build webview**: `npm run build:webview`
+- **Build extension**: `npm run compile`
+- **Watch mode**: `npm run watch` for automatic rebuilding
+
+### Project Structure
+
+- `/extension` - Main extension code and configuration
+  - `/src` - TypeScript source code
+  - `/webview-ui-vite` - React-based webview UI built with Vite
+  - `/dist` - Compiled extension code
+
+### Alternative: Using Yarn
+
+If you prefer yarn over npm:
+```bash
+cd extension
+yarn install
+cd webview-ui-vite && yarn install
+```
 
 Make your changes, create a pull request, and let's make magic together!
 
