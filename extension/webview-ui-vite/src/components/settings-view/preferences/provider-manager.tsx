@@ -17,7 +17,7 @@ import { rpcClient } from "@/lib/rpc-client"
 import { useAtom } from "jotai"
 import { createDefaultSettings, providerSettingsAtom, useSwitchView } from "./atoms"
 import { Switch } from "@/components/ui/switch"
-import { Wand2 } from "lucide-react"
+import { Wand2, Info, CheckCircle2, XCircle } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
 	DropdownMenu,
@@ -37,6 +37,47 @@ import {
 } from "@/components/ui/dialog"
 
 type DistributedKeys<T> = T extends any ? keyof T : never
+
+/**
+ * AiderHelpCard - Provides contextual help and quick start guide for Aider setup
+ */
+const AiderHelpCard: React.FC = () => {
+	return (
+		<Alert className="mb-4 bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
+			<Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+			<AlertDescription className="text-sm text-blue-900 dark:text-blue-100">
+				<div className="space-y-2">
+					<p className="font-semibold">Quick Setup Guide for Aider:</p>
+					<ol className="list-decimal ml-4 space-y-1 text-xs">
+						<li>Ensure Aider is running at the specified Base URL</li>
+						<li>Enter your AI provider's API key (OpenAI, Anthropic, etc.)</li>
+						<li>Click "Save Settings" to store your configuration</li>
+						<li>Select an Aider model from the Preferences tab</li>
+					</ol>
+					<p className="text-xs mt-2">
+						<strong>Default Setup:</strong> If using Docker, Aider should be accessible at{" "}
+						<code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">
+							http://localhost:8080/v1
+						</code>
+					</p>
+					<div className="mt-3 pt-2 border-t border-blue-200 dark:border-blue-800">
+						<p className="text-xs">
+							📚 <strong>New to Aider?</strong> Check out{" "}
+							<a
+								href="https://github.com/rkendel1/clauder/blob/main/AIDER-EXAMPLES.md"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="underline hover:text-blue-700 dark:hover:text-blue-300">
+								AIDER-EXAMPLES.md
+							</a>{" "}
+							for practical task templates and best practices!
+						</p>
+					</div>
+				</div>
+			</AlertDescription>
+		</Alert>
+	)
+}
 
 interface PresetsDropdownProps {
 	onSelectPreset: (url: string) => void
@@ -92,6 +133,7 @@ const ProviderManager: React.FC = () => {
 	const [providerSettings, setProviderSettings] = useAtom(providerSettingsAtom)
 	const [error, setError] = useState<string>("")
 	const [showApplyModel, setShowApplyModel] = useState(false)
+	const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
 	// Query existing providers
 	const { data: providersData, refetch } = rpcClient.listProviders.useQuery({})
@@ -166,6 +208,30 @@ const ProviderManager: React.FC = () => {
 			...providerSettings,
 			[field]: value,
 		})
+
+		// Real-time validation for Aider provider
+		if (providerSettings.providerId === "aider") {
+			const errors: Record<string, string> = {}
+			
+			if (field === "baseUrl" && value) {
+				const urlValue = value as string
+				// Validate URL format
+				if (!urlValue.startsWith("http://") && !urlValue.startsWith("https://")) {
+					errors.baseUrl = "URL must start with http:// or https://"
+				}
+				if (!urlValue.includes("/v1")) {
+					errors.baseUrl = "URL should end with /v1 for OpenAI compatibility"
+				}
+			}
+			
+			if (field === "apiKey" && !value) {
+				errors.apiKey = "API key is required for Aider to communicate with AI providers"
+			}
+			
+			setValidationErrors(errors)
+		} else {
+			setValidationErrors({})
+		}
 	}
 
 	const renderProviderSpecificFields = () => {
@@ -380,16 +446,97 @@ const ProviderManager: React.FC = () => {
 
 			default:
 				return (
-					<div className="space-y-2">
-						<Label htmlFor="apiKey">API Key</Label>
-						<Input
-							id="apiKey"
-							type="password"
-							value={providerSettings.apiKey || ""}
-							onChange={(e) => updateSettings("apiKey", e.target.value)}
-							className="h-8"
-						/>
-					</div>
+					<>
+						<div className="space-y-2">
+							<div className="flex items-center gap-2">
+								<Label htmlFor="apiKey">API Key</Label>
+								{providerSettings.providerId === "aider" && (
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+											</TooltipTrigger>
+											<TooltipContent className="max-w-xs">
+												<p className="text-xs">
+													Enter your AI provider's API key (OpenAI, Anthropic, etc.). Aider
+													will use this to communicate with the underlying AI model.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								)}
+							</div>
+							<Input
+								id="apiKey"
+								type="password"
+								value={providerSettings.apiKey || ""}
+								onChange={(e) => updateSettings("apiKey", e.target.value)}
+								className="h-8"
+								placeholder={
+									providerSettings.providerId === "aider"
+										? "sk-... or your provider's key"
+										: ""
+								}
+							/>
+							{providerSettings.providerId === "aider" && (
+								<p className="text-[0.8rem] text-muted-foreground">
+									This key is passed to the underlying AI provider configured in Aider.
+								</p>
+							)}
+							{validationErrors.apiKey && (
+								<p className="text-[0.8rem] text-red-500 flex items-center gap-1">
+									<XCircle className="h-3 w-3" />
+									{validationErrors.apiKey}
+								</p>
+							)}
+						</div>
+						{/* Add baseUrl field for Aider provider */}
+						{providerSettings.providerId === "aider" && (
+							<div className="space-y-2">
+								<div className="flex items-center gap-2">
+									<Label htmlFor="baseUrl">Base URL</Label>
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+											</TooltipTrigger>
+											<TooltipContent className="max-w-xs">
+												<p className="text-xs">
+													The URL where your Aider server is running. Default is localhost:8080
+													for local/Docker setups. Must include /v1 suffix for OpenAI API
+													compatibility.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
+								<Input
+									id="baseUrl"
+									value={(providerSettings as any).baseUrl || ""}
+									onChange={(e) => updateSettings("baseUrl", e.target.value)}
+									className="h-8"
+									placeholder="http://localhost:8080/v1"
+								/>
+								<p className="text-[0.8rem] text-muted-foreground">
+									URL where Aider server is running. Default: http://localhost:8080/v1
+									<br />
+									For Docker: Use container name or localhost with port mapping
+								</p>
+								{validationErrors.baseUrl && (
+									<p className="text-[0.8rem] text-red-500 flex items-center gap-1">
+										<XCircle className="h-3 w-3" />
+										{validationErrors.baseUrl}
+									</p>
+								)}
+								{!validationErrors.baseUrl && (providerSettings as any).baseUrl && (
+									<p className="text-[0.8rem] text-green-600 dark:text-green-400 flex items-center gap-1">
+										<CheckCircle2 className="h-3 w-3" />
+										URL format looks good
+									</p>
+								)}
+							</div>
+						)}
+					</>
 				)
 		}
 	}
@@ -402,6 +549,10 @@ const ProviderManager: React.FC = () => {
 				<CardContent className="p-6">
 					<div className="space-y-4">
 						<h2 className="text-xl font-semibold">Provider Settings</h2>
+						
+						{/* Show Aider help card when Aider is selected */}
+						{providerSettings?.providerId === "aider" && <AiderHelpCard />}
+						
 						<div className="space-y-4">
 							<div className="space-y-2">
 								<Label htmlFor="providerId">Provider</Label>
@@ -441,7 +592,8 @@ const ProviderManager: React.FC = () => {
 
 							<Button
 								onClick={() => providerSettings && saveSettings(providerSettings)}
-								className="w-full h-9">
+								className="w-full h-9"
+								disabled={Object.keys(validationErrors).length > 0}>
 								Save Settings
 							</Button>
 							{currentProvider && (

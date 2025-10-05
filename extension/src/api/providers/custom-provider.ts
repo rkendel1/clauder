@@ -145,13 +145,26 @@ const providerToAISDKModel = (settings: ApiConstructorOptions, modelId: string):
 			}).languageModel(modelId)
 		case PROVIDER_IDS.AIDER:
 			if (!settings.providerSettings.apiKey) {
-				throw new CustomProviderError("Aider Missing API key", settings.providerSettings.providerId, modelId)
+				throw new CustomProviderError(
+					"Aider requires an API key for the underlying AI provider (OpenAI, Anthropic, etc.). Please configure your API key in the Aider settings.",
+					settings.providerSettings.providerId,
+					modelId
+				)
+			}
+			// Validate base URL if provided
+			const aiderBaseUrl = settings.providerSettings.baseUrl || "http://localhost:8080/v1"
+			if (!aiderBaseUrl.startsWith("http://") && !aiderBaseUrl.startsWith("https://")) {
+				throw new CustomProviderError(
+					"Aider base URL must start with http:// or https://",
+					settings.providerSettings.providerId,
+					modelId
+				)
 			}
 			// Aider uses OpenAI-compatible API
 			return createOpenAI({
 				apiKey: settings.providerSettings.apiKey,
 				compatibility: "compatible",
-				baseURL: settings.providerSettings.baseUrl || "http://localhost:8080/v1",
+				baseURL: aiderBaseUrl,
 				headers: {
 					"User-Agent": `Kodu/${version}`,
 				},

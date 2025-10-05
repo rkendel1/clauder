@@ -2,7 +2,10 @@
 
 This guide explains how to use Aider as an AI provider with the Kuhmpel VS Code Extension.
 
-> 💡 **For detailed information about the source-based Aider installation**, see [AIDER-SOURCE.md](./AIDER-SOURCE.md)
+> 💡 **Quick Links:**
+> - [Source Installation Guide](./AIDER-SOURCE.md) - Detailed information about source-based Aider installation
+> - [Example Tasks & Templates](./AIDER-EXAMPLES.md) - Get started with practical examples and task templates
+> - [Implementation Details](./IMPLEMENTATION.md) - Technical implementation summary
 
 ## 🤔 What is Aider?
 
@@ -20,6 +23,45 @@ Combining Aider with Kuhmpel gives you:
 2. **Git-Aware AI**: Aider understands your repository history and structure
 3. **Multiple Models**: Switch between different AI providers seamlessly
 4. **Local or Remote**: Run Aider locally or connect to a remote instance
+
+## ⚡ Quick Start (3 Steps)
+
+### Step 1: Start Aider Server
+Choose your preferred method:
+
+**Option A: Using Docker** (Recommended)
+```bash
+# Configure API key and start
+cp .env.example .env
+nano .env  # Add AIDER_API_KEY
+./start.sh
+
+# Access Code Server at http://localhost:8443
+```
+
+**Option B: Using Standalone Aider**
+```bash
+# Install and start
+pip install aider-chat
+aider --listen 0.0.0.0:8080 --model gpt-4
+```
+
+### Step 2: Configure in VS Code
+1. Open Kuhmpel Settings (gear icon in sidebar)
+2. Navigate to **Preferences** tab
+3. Click "**click here**" to open Provider Manager
+4. Select "**Aider**" from the provider dropdown
+5. Configuration is pre-filled with defaults:
+   - **Base URL**: `http://localhost:8080/v1` ✓ (already filled)
+   - **API Key**: Enter your OpenAI/Anthropic API key
+6. Click "**Save Settings**"
+
+### Step 3: Select Aider Model
+1. Return to Preferences tab
+2. Select an Aider model (e.g., "Aider Claude 3.5 Sonnet" - Recommended)
+3. Start coding with Aider!
+
+> 📚 **New to Aider?** Check out [AIDER-EXAMPLES.md](./AIDER-EXAMPLES.md) for practical task templates and examples!
 
 ## 🚀 Setup Options
 
@@ -84,18 +126,42 @@ aider --listen 0.0.0.0:8080 \
 ### In VS Code / Code Server:
 
 1. **Open Kuhmpel Settings**
-   - Click the gear icon in Kuhmpel sidebar
+   - Click the gear icon ⚙️ in Kuhmpel sidebar
    - Or use Command Palette: "Kuhmpel: Settings"
 
-2. **Add Aider Provider**
-   - Provider: Select "Aider"
-   - Base URL: `http://localhost:8080/v1` (or your Aider server URL)
-   - API Key: Your OpenAI/Anthropic/etc. API key
-   - Model: Select from available models
+2. **Navigate to Provider Manager**
+   - Go to the **Preferences** tab
+   - Click "**click here**" link (under the model selector) to access Provider Manager
 
-3. **Test the Connection**
-   - Start a new task in Kuhmpel
-   - The extension will communicate with Aider
+3. **Configure Aider Provider**
+   
+   When you select "**Aider**" from the provider dropdown, you'll see:
+   
+   **📘 Quick Setup Guide Card** (automatically displayed):
+   - Step-by-step setup instructions
+   - Default configuration info
+   - Docker-specific guidance
+   
+   **Configuration Fields** (with smart defaults):
+   - **API Key**: Your OpenAI/Anthropic API key
+     - ℹ️ *Hint: This key is passed to the underlying AI provider configured in Aider*
+     - ✅ Real-time validation ensures the key is not empty
+   
+   - **Base URL**: `http://localhost:8080/v1` (pre-filled)
+     - ℹ️ *Hint: For Docker, use container name or localhost with port mapping*
+     - ✅ Validates URL format (must start with http:// or https://)
+     - ✅ Checks for /v1 suffix for OpenAI compatibility
+   
+4. **Save and Select Model**
+   - Click "**Save Settings**" (disabled if validation errors exist)
+   - Return to the Preferences tab
+   - Select your preferred Aider model from the model picker
+   - Recommended: **Aider Claude 3.5 Sonnet** (marked with ⭐)
+
+5. **Verify Configuration**
+   - Green checkmark ✓ appears next to "Aider" in provider list when configured
+   - Visual feedback shows if URL format is valid
+   - Start a new task to test the connection!
 
 ### Configuration Examples
 
@@ -222,6 +288,7 @@ export AIDER_CACHE_PROMPTS=true
 2. **Clear Instructions**: Be specific about what you want
    - ✅ "Add error handling to the login function in auth.js"
    - ❌ "Fix the login"
+   - 📚 See [AIDER-EXAMPLES.md](./AIDER-EXAMPLES.md) for task templates and examples
 
 3. **Review Changes**: Always review before committing
    - Use VS Code's diff viewer
@@ -384,6 +451,32 @@ aider --read src/
 # Batch process with Aider
 echo "Fix all TODO comments" | aider --yes --no-stream
 ```
+
+## 📚 Example Tasks and Templates
+
+New to Aider? Check out our comprehensive guide with practical examples:
+
+👉 **[AIDER-EXAMPLES.md](./AIDER-EXAMPLES.md)**
+
+This guide includes:
+- **Quick Start Examples**: Simple tasks to get started
+- **Task Templates**: Reusable patterns for common scenarios
+- **Best Practices**: Tips for writing effective Aider prompts
+- **Progressive Learning Path**: Structured approach to mastering Aider
+- **Common Scenarios**: 
+  - Code creation and refactoring
+  - Bug fixing and testing
+  - API integration
+  - Documentation updates
+  - Multi-file changes
+  - Performance optimization
+
+**Popular Examples:**
+- Creating new features with proper structure
+- Adding comprehensive tests
+- Refactoring code to follow patterns
+- Fixing bugs with edge case handling
+- Database/model changes with migrations
 
 ## 🤝 Support
 
