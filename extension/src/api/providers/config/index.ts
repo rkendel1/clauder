@@ -26,10 +26,6 @@ export const providerConfigs: Record<string, ProviderConfig> = {
 	[PROVIDER_IDS.AIDER]: aiderConfig,
 	// Add other providers here as they're created
 }
-	[PROVIDER_IDS.ANTHROPIC]: anthropicConfig,
-	[PROVIDER_IDS.OPENROUTER]: openRouterConfig,
-	// Add other providers here as they're created
-}
 
 /**
  * Flat list of all models from all providers.
