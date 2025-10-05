@@ -60,6 +60,19 @@ const AiderHelpCard: React.FC = () => {
 							http://localhost:8080/v1
 						</code>
 					</p>
+					<div className="mt-3 pt-2 border-t border-blue-200 dark:border-blue-800">
+						<p className="text-xs">
+							📚 <strong>New to Aider?</strong> Check out{" "}
+							<a
+								href="https://github.com/rkendel1/clauder/blob/main/AIDER-EXAMPLES.md"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="underline hover:text-blue-700 dark:hover:text-blue-300">
+								AIDER-EXAMPLES.md
+							</a>{" "}
+							for practical task templates and best practices!
+						</p>
+					</div>
 				</div>
 			</AlertDescription>
 		</Alert>
@@ -435,7 +448,24 @@ const ProviderManager: React.FC = () => {
 				return (
 					<>
 						<div className="space-y-2">
-							<Label htmlFor="apiKey">API Key</Label>
+							<div className="flex items-center gap-2">
+								<Label htmlFor="apiKey">API Key</Label>
+								{providerSettings.providerId === "aider" && (
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+											</TooltipTrigger>
+											<TooltipContent className="max-w-xs">
+												<p className="text-xs">
+													Enter your AI provider's API key (OpenAI, Anthropic, etc.). Aider
+													will use this to communicate with the underlying AI model.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								)}
+							</div>
 							<Input
 								id="apiKey"
 								type="password"
@@ -444,7 +474,7 @@ const ProviderManager: React.FC = () => {
 								className="h-8"
 								placeholder={
 									providerSettings.providerId === "aider"
-										? "Your OpenAI/Anthropic/etc. API key"
+										? "sk-... or your provider's key"
 										: ""
 								}
 							/>
@@ -463,7 +493,23 @@ const ProviderManager: React.FC = () => {
 						{/* Add baseUrl field for Aider provider */}
 						{providerSettings.providerId === "aider" && (
 							<div className="space-y-2">
-								<Label htmlFor="baseUrl">Base URL</Label>
+								<div className="flex items-center gap-2">
+									<Label htmlFor="baseUrl">Base URL</Label>
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+											</TooltipTrigger>
+											<TooltipContent className="max-w-xs">
+												<p className="text-xs">
+													The URL where your Aider server is running. Default is localhost:8080
+													for local/Docker setups. Must include /v1 suffix for OpenAI API
+													compatibility.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
 								<Input
 									id="baseUrl"
 									value={(providerSettings as any).baseUrl || ""}
