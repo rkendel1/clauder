@@ -97,6 +97,7 @@ Access Code Server at http://localhost:8443 - Everything is pre-configured!
 📚 **See full documentation:**
 - [Docker Deployment Guide](./DOCKER.md) - Complete Docker setup and configuration
 - [Aider Integration Guide](./AIDER.md) - Using Aider as an AI provider
+- [Aider Source Installation](./AIDER-SOURCE.md) - Details about source-based installation
 
 ---
 

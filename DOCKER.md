@@ -269,6 +269,7 @@ For internet access, use a tunnel service:
 
 - [Code Server Documentation](https://coder.com/docs/code-server)
 - [Aider Documentation](https://aider.chat/docs)
+- [Aider Source Installation Guide](./AIDER-SOURCE.md)
 - [Kuhmpel Extension Guide](./README.md)
 - [Docker Documentation](https://docs.docker.com/)
 

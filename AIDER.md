@@ -2,6 +2,8 @@
 
 This guide explains how to use Aider as an AI provider with the Kuhmpel VS Code Extension.
 
+> 💡 **For detailed information about the source-based Aider installation**, see [AIDER-SOURCE.md](./AIDER-SOURCE.md)
+
 ## 🤔 What is Aider?
 
 [Aider](https://aider.chat) is an AI pair programming tool that works directly with git repositories. It can:
