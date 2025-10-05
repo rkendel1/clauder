@@ -2,6 +2,8 @@
 
 This guide explains how to use Aider as an AI provider with the Kuhmpel VS Code Extension.
 
+> 💡 **For detailed information about the source-based Aider installation**, see [AIDER-SOURCE.md](./AIDER-SOURCE.md)
+
 ## 🤔 What is Aider?
 
 [Aider](https://aider.chat) is an AI pair programming tool that works directly with git repositories. It can:
@@ -23,7 +25,7 @@ Combining Aider with Kuhmpel gives you:
 
 ### Option 1: Docker (Recommended)
 
-The easiest way is using the provided Docker setup:
+The easiest way is using the provided Docker setup with Aider installed from source:
 
 ```bash
 # 1. Configure your API key
@@ -35,6 +37,13 @@ nano .env  # Add your AIDER_API_KEY
 
 # 3. Access Code Server at http://localhost:8443
 ```
+
+**What you get:**
+- Aider installed from source code (in `aider-source/` directory)
+- Pre-configured API endpoint at `http://localhost:8080/v1`
+- Auto-generated configuration file with optimal settings
+- Environment variable `AIDER_BASE_URL` set automatically
+- Ready-to-use integration with CA Code Extension
 
 Aider will be available at `http://localhost:8080/v1`
 
