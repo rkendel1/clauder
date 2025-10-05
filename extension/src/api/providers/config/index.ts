@@ -8,6 +8,7 @@ import { openaiCompatible } from "./openai-compatible"
 import { mistralConfig } from "./mistral"
 import { anthropicConfig } from "./anthropic"
 import { openRouterConfig } from "./openrouter"
+import { aiderConfig } from "./aider"
 
 /**
  * Universal provider configuration registry.
@@ -22,6 +23,7 @@ export const providerConfigs: Record<string, ProviderConfig> = {
 	[PROVIDER_IDS.MISTRAL]: mistralConfig,
 	[PROVIDER_IDS.ANTHROPIC]: anthropicConfig,
 	[PROVIDER_IDS.OPENROUTER]: openRouterConfig,
+	[PROVIDER_IDS.AIDER]: aiderConfig,
 	// Add other providers here as they're created
 }
 

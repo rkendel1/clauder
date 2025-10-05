@@ -109,6 +109,24 @@ export interface MistralSettings extends BaseProviderSettings {
 	apiKey: string
 }
 
+export interface AnthropicSettings extends BaseProviderSettings {
+	providerId: "anthropic"
+	apiKey: string
+	baseUrl?: string
+}
+
+export interface OpenRouterSettings extends BaseProviderSettings {
+	providerId: "openrouter"
+	apiKey: string
+	baseUrl?: string
+}
+
+export interface AiderSettings extends BaseProviderSettings {
+	providerId: "aider"
+	apiKey: string
+	baseUrl?: string
+}
+
 export type ProviderSettings =
 	| GoogleGenAISettings
 	| GoogleVertexSettings
@@ -119,6 +137,10 @@ export type ProviderSettings =
 	| DeepseekSettings
 	| DeepInfraSettings
 	| OpenAICompatibleSettings
+	| MistralSettings
+	| AnthropicSettings
+	| OpenRouterSettings
+	| AiderSettings
 
 export interface ProviderWithModel {
 	settings: ProviderSettings
