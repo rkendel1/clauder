@@ -77,6 +77,24 @@ Whether you're crafting your first "Hello, World!" or architecting complex syste
 
 ---
 
+## 🐳 Docker Deployment
+
+**New!** Run Kuhmpel with Code Server and Aider in a single Docker container:
+
+```bash
+git clone https://github.com/rkendel1/clauder.git
+cd clauder
+./start.sh
+```
+
+Access Code Server at http://localhost:8443 - Everything is pre-configured!
+
+📚 **See full documentation:**
+- [Docker Deployment Guide](./DOCKER.md) - Complete Docker setup and configuration
+- [Aider Integration Guide](./AIDER.md) - Using Aider as an AI provider
+
+---
+
 <details>
 <summary>🔧 For the tech-savvy: How to Contribute</summary>
 
@@ -119,6 +137,22 @@ cd extension
 yarn install
 cd webview-ui-vite && yarn install
 ```
+
+### Docker Development
+
+To test the Docker deployment:
+```bash
+# Build and run
+./start.sh --build
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+See [DOCKER.md](./DOCKER.md) for detailed Docker documentation.
 
 Make your changes, create a pull request, and let's make magic together!
 

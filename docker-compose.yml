@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  kuhmpel-codeserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kuhmpel-dev-environment
+    ports:
+      # Code Server web interface
+      - "8443:8443"
+      # Aider API server
+      - "8080:8080"
+    environment:
+      # Code Server Configuration
+      - CODE_SERVER_PORT=8443
+      - CODE_SERVER_AUTH=password
+      - PASSWORD=${CODE_SERVER_PASSWORD:-kuhmpel2024}
+      
+      # Aider Configuration
+      - AIDER_PORT=8080
+      - AIDER_API_KEY=${AIDER_API_KEY:-}
+      - AIDER_MODEL=${AIDER_MODEL:-gpt-4}
+      
+      # Additional AI Provider API Keys (optional)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      
+      # Workspace settings
+      - WORKSPACE_DIR=/workspace
+      
+    volumes:
+      # Persist workspace data
+      - ./workspace:/workspace
+      # Persist code-server config and extensions
+      - code-server-config:/home/coder/.config/code-server
+      - code-server-extensions:/home/coder/.local/share/code-server
+      # Persist Aider history (optional)
+      - aider-data:/home/coder/.aider
+      
+    restart: unless-stopped
+    
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8443/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  code-server-config:
+    driver: local
+  code-server-extensions:
+    driver: local
+  aider-data:
+    driver: local
+
+networks:
+  default:
+    name: kuhmpel-network
