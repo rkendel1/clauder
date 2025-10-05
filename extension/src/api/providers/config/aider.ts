@@ -6,13 +6,34 @@
  * This configuration enables the VS Code extension to communicate with Aider
  * through its OpenAI-compatible API interface.
  * 
- * Configuration:
- * - baseUrl: The URL where Aider's API is accessible (default: http://localhost:8080/v1)
- * - apiKey: Optional API key for authentication (Aider can run without auth locally)
- * - models: Supports various models through Aider's proxy capabilities
+ * ## Overview
+ * Aider provides a unified interface for multiple AI models and providers,
+ * making it easy to switch between different backends while maintaining
+ * consistent code editing capabilities.
  * 
- * Note: Aider acts as a proxy to underlying AI providers (OpenAI, Anthropic, etc.)
- * so the actual model availability depends on your Aider configuration.
+ * ## Configuration Fields
+ * - **baseUrl**: The URL where Aider's API is accessible
+ *   - Default: http://localhost:8080/v1
+ *   - For Docker: Use the container name or localhost with port mapping
+ *   - For remote servers: Use the full URL including protocol and port
+ * 
+ * - **apiKey**: API key for the underlying AI provider
+ *   - Required for cloud providers (OpenAI, Anthropic, etc.)
+ *   - May be optional for local models (Ollama, LMStudio)
+ *   - Aider passes this to the configured backend provider
+ * 
+ * ## Supported Models
+ * This configuration supports various models through Aider's proxy:
+ * - GPT-4 and GPT-3.5 (via OpenAI)
+ * - Claude 3 Opus and Sonnet (via Anthropic)
+ * - Other models as configured in your Aider setup
+ * 
+ * ## Usage Notes
+ * - Ensure Aider is running and accessible at the configured baseUrl
+ * - Model availability depends on your Aider backend configuration
+ * - Test connection before starting tasks for best experience
+ * 
+ * @see {@link https://aider.chat} for more information about Aider
  */
 
 import { ProviderConfig } from "../types"

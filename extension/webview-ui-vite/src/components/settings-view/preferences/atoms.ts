@@ -87,6 +87,14 @@ export const createDefaultSettings = (providerId: ProviderType): ProviderSetting
 				cacheReadsPrice: 0,
 				cacheWritesPrice: 0,
 			}
+		case "aider":
+			// Pre-fill default values for Aider to streamline setup
+			return {
+				...baseSettings,
+				providerId: "aider",
+				apiKey: "",
+				baseUrl: "http://localhost:8080/v1", // Default Aider server URL
+			}
 		default:
 			return {
 				...baseSettings,
