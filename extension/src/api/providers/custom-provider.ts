@@ -143,6 +143,19 @@ const providerToAISDKModel = (settings: ApiConstructorOptions, modelId: string):
 					"User-Agent": `Kodu/${version}`,
 				},
 			}).languageModel(modelId)
+		case PROVIDER_IDS.AIDER:
+			if (!settings.providerSettings.apiKey) {
+				throw new CustomProviderError("Aider Missing API key", settings.providerSettings.providerId, modelId)
+			}
+			// Aider uses OpenAI-compatible API
+			return createOpenAI({
+				apiKey: settings.providerSettings.apiKey,
+				compatibility: "compatible",
+				baseURL: settings.providerSettings.baseUrl || "http://localhost:8080/v1",
+				headers: {
+					"User-Agent": `Kodu/${version}`,
+				},
+			}).languageModel(modelId)
 
 		default:
 			throw new CustomProviderError("Provider not configured", settings.providerSettings.providerId, modelId)
