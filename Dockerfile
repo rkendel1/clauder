@@ -73,7 +73,8 @@ RUN npm install --legacy-peer-deps && \
 
 # Create startup script
 USER root
-RUN cat > /usr/local/bin/start-services.sh << 'EOF'
+RUN cat > /usr/local/bin/start-services.sh <<'EOF' && \
+chmod +x /usr/local/bin/start-services.sh
 #!/bin/bash
 set -e
 
@@ -87,7 +88,7 @@ AIDER_CONFIG_DIR="/home/coder/.aider"
 mkdir -p "$AIDER_CONFIG_DIR"
 
 # Create .aider.conf.yml with default settings for CA Code Extension integration
-cat > "$AIDER_CONFIG_DIR/.aider.conf.yml" << 'AIDERCONF'
+cat > "$AIDER_CONFIG_DIR/.aider.conf.yml" <<'AIDERCONF'
 # Aider configuration for CA Code Extension integration
 # This file is auto-generated on container startup
 # You can override these settings by modifying this file
@@ -132,8 +133,6 @@ exec code-server \
     --auth "${CODE_SERVER_AUTH:-password}" \
     ${WORKSPACE_DIR}
 EOF
-
-RUN chmod +x /usr/local/bin/start-services.sh
 
 # Expose ports
 # 8443 - Code Server web interface
