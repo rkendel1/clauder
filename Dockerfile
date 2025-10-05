@@ -37,11 +37,15 @@ RUN apt-get update && apt-get install -y \
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Install Aider
+# Copy Aider source code
+COPY --chown=root:root ./aider-source /tmp/aider-source
+
+# Install Aider from local source
 # Create a virtual environment for Aider to avoid conflicts
 RUN python3 -m venv /opt/aider-venv && \
     /opt/aider-venv/bin/pip install --upgrade pip && \
-    /opt/aider-venv/bin/pip install aider-chat
+    /opt/aider-venv/bin/pip install /tmp/aider-source && \
+    rm -rf /tmp/aider-source
 
 # Create symbolic link for easy access
 RUN ln -s /opt/aider-venv/bin/aider /usr/local/bin/aider
@@ -75,9 +79,39 @@ set -e
 
 echo "Starting Kuhmpel Development Environment..."
 
+# Set default AIDER_BASE_URL for extension integration
+export AIDER_BASE_URL="${AIDER_BASE_URL:-http://localhost:${AIDER_PORT}/v1}"
+
+# Create default Aider configuration if it doesn't exist
+AIDER_CONFIG_DIR="/home/coder/.aider"
+mkdir -p "$AIDER_CONFIG_DIR"
+
+# Create .aider.conf.yml with default settings for CA Code Extension integration
+cat > "$AIDER_CONFIG_DIR/.aider.conf.yml" << 'AIDERCONF'
+# Aider configuration for CA Code Extension integration
+# This file is auto-generated on container startup
+# You can override these settings by modifying this file
+
+# API settings (will be overridden by command-line args)
+model: gpt-4
+auto-commits: false
+yes: true
+
+# Performance settings
+cache-prompts: true
+map-tokens: 1024
+
+# Editor integration
+edit-format: diff
+show-diffs: true
+AIDERCONF
+
+chown -R coder:coder "$AIDER_CONFIG_DIR"
+
 # Start Aider server in the background if API key is provided
 if [ -n "$AIDER_API_KEY" ]; then
     echo "Starting Aider service on port ${AIDER_PORT}..."
+    echo "Aider API will be available at: ${AIDER_BASE_URL}"
     /opt/aider-venv/bin/aider \
         --api-key "$AIDER_API_KEY" \
         --model "${AIDER_MODEL:-gpt-4}" \

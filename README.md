@@ -89,6 +89,11 @@ cd clauder
 
 Access Code Server at http://localhost:8443 - Everything is pre-configured!
 
+**What's Included:**
+- **Aider from Source**: Aider is installed directly from the repository source code for better integration and control
+- **Pre-configured API**: Aider API is automatically configured at `http://localhost:8080/v1` for seamless extension integration
+- **Default Settings**: Aider configuration file is auto-generated with optimal settings for CA Code Extension
+
 📚 **See full documentation:**
 - [Docker Deployment Guide](./DOCKER.md) - Complete Docker setup and configuration
 - [Aider Integration Guide](./AIDER.md) - Using Aider as an AI provider

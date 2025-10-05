@@ -8,8 +8,16 @@ The Docker container provides a complete development environment with:
 
 - **Code Server**: VS Code running in your browser
 - **Kuhmpel Extension**: Pre-installed and ready to use
-- **Aider**: AI pair programming tool with API server
+- **Aider from Source**: AI pair programming tool installed from repository source code
+- **Pre-configured Integration**: Aider API automatically configured for CA Code Extension
 - **All Dependencies**: Node.js, Python, and all required packages
+
+### Aider Source Installation
+
+Aider is installed directly from the source code included in this repository (`aider-source/`) rather than from PyPI. This provides:
+- **Better integration**: Full control over the Aider installation
+- **Consistent versioning**: Locked to a specific version tested with this setup
+- **Customization options**: Easier to modify or extend Aider functionality if needed
 
 ## 🚀 Quick Start (One Command)
 
@@ -63,9 +71,10 @@ Copy `.env.example` to `.env` and configure:
 # Code Server
 CODE_SERVER_PASSWORD=your-secure-password
 
-# Aider (optional)
-AIDER_API_KEY=sk-...  # Your OpenAI/Anthropic/etc. API key
-AIDER_MODEL=gpt-4     # Model to use with Aider
+# Aider (pre-configured for CA Code Extension)
+AIDER_API_KEY=sk-...                      # Your OpenAI/Anthropic/etc. API key
+AIDER_MODEL=gpt-4                         # Model to use with Aider
+AIDER_BASE_URL=http://localhost:8080/v1   # Pre-configured API endpoint
 
 # Extension API Keys (configure in VS Code settings)
 OPENAI_API_KEY=sk-...
@@ -125,17 +134,29 @@ docker-compose up --build -d
 
 Once the container is running with `AIDER_API_KEY` configured:
 
-1. **In Kuhmpel Extension**:
+1. **Pre-configured Integration**:
+   - Aider is automatically configured with optimal settings
+   - Configuration file is created at `/home/coder/.aider/.aider.conf.yml`
+   - API endpoint is pre-set to `http://localhost:8080/v1`
+
+2. **In Kuhmpel Extension**:
    - Open settings (gear icon)
    - Select "Aider" as provider
-   - Use `http://localhost:8080/v1` as base URL
+   - Base URL is pre-configured: `http://localhost:8080/v1`
    - Enter your API key (same as `AIDER_API_KEY`)
 
-2. **Direct Aider CLI** (inside container):
+3. **Direct Aider CLI** (inside container):
    ```bash
    docker exec -it kuhmpel-dev-environment bash
    aider --help
    ```
+
+4. **Default Aider Configuration**:
+   The container auto-generates `.aider.conf.yml` with:
+   - Auto-commits disabled for safer operation
+   - Prompt caching enabled for better performance
+   - Diff editing format for clearer changes
+   - Repository map tokens set to 1024
 
 ## 📁 Data Persistence
 
