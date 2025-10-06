@@ -22,6 +22,7 @@ All you need to is tell Claude what's your task and Claude will take care of it 
 -   📚 **Learn and Grow**: Improve your coding skills with explanations and best practices
 -   🔍 **Search The Web**: Take inspiration from existing content, or ask claude to do it's own research to adapt his knowledge for your needings.
 -   🔍 **Deploy and Publish**: Claude can help you publish your project online, using existings tools without you breaking your head how to get your awesome project online.
+-   🌐 **Browser Inspector**: Inspect web applications directly in VS Code with AI-powered element analysis. [Learn more](docs/BROWSER_INSPECTOR.md)
 
 ## 🛠 Getting Started
 
