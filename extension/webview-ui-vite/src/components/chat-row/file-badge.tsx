@@ -18,22 +18,22 @@ export function FileBadges({ files = [] }: FileBadgesProps) {
 
   if (!files || files.length === 0) {
     return (
-      <div className="p-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg shadow-md max-w-md mx-auto">
-        <p className="text-gray-600">No files attached.</p>
+      <div className="p-4 bg-card border border-border rounded-lg shadow-md max-w-md mx-auto">
+        <p className="text-muted-foreground">No files attached.</p>
       </div>
     )
   }
 
   return (
-    <div className="p-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg shadow-md max-w-md mx-auto">
-      <h2 className="text-lg font-semibold text-gray-800 mb-2">Attached Files</h2>
+    <div className="p-4 bg-card border border-border rounded-lg shadow-md max-w-md mx-auto">
+      <h2 className="text-lg font-semibold text-card-foreground mb-2">Attached Files</h2>
       <div className="flex flex-wrap gap-2">
         {files.map((file, index) => (
           <Dialog key={index}>
             <DialogTrigger asChild>
               <Button 
                 variant="outline" 
-                className="bg-white hover:bg-gray-100"
+                className="bg-background hover:bg-muted"
                 onClick={() => setSelectedFile(file)}
               >
                 <File className="w-4 h-4 mr-2" />
@@ -53,7 +53,7 @@ export function FileBadges({ files = [] }: FileBadgesProps) {
           </Dialog>
         ))}
       </div>
-      <p className="mt-2 text-sm text-gray-600">
+      <p className="mt-2 text-sm text-muted-foreground">
         Total files: {files.length}
       </p>
     </div>

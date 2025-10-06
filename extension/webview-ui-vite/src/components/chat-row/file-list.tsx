@@ -62,9 +62,9 @@ export default function AttachmentsList({
 						<Button
 							key={index}
 							variant="outline"
-							className="bg-gray-700 text-white hover:bg-gray-600 transition-colors h-6 px-2 py-0 text-xs"
+							className="bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors h-6 px-2 py-0 text-xs"
 						>
-							<span className="font-mono mr-1 border border-gray-500 rounded px-1">
+							<span className="font-mono mr-1 border border-border rounded px-1">
 								{getLanguageIcon(item.name)}
 							</span>
 							<span>{item.name}</span>
@@ -76,7 +76,7 @@ export default function AttachmentsList({
 								<Button
 									key={index}
 									variant="outline"
-									className="bg-gray-700 text-white hover:bg-gray-600 transition-colors h-6 px-2 py-0 text-xs"
+									className="bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors h-6 px-2 py-0 text-xs"
 								>
 									<Link className="w-3 h-3 mr-1" />
 									<span>{item.description}</span>
@@ -90,7 +90,7 @@ export default function AttachmentsList({
 					<Button
 						variant="outline"
 						onClick={toggleExpand}
-						className="bg-gray-600 text-white hover:bg-gray-500 transition-colors h-6 px-2 py-0 text-xs"
+						className="bg-muted text-muted-foreground hover:bg-muted/80 transition-colors h-6 px-2 py-0 text-xs"
 					>
 						{isExpanded ? (
 							<>
