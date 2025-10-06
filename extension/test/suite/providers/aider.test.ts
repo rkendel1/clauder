@@ -63,10 +63,18 @@ suite('Aider Provider Integration', () => {
 
 	test('Aider has Claude model configured', () => {
 		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
-		const claudeModel = aiderConfig.models.find(m => m.id.includes('claude'))
+		const claudeModels = aiderConfig.models.filter(m => m.id.includes('claude'))
 		
-		assert.ok(claudeModel, 'At least one Claude model should be available')
-		assert.ok(claudeModel.name.includes('Claude'), 'Claude model name should include Claude')
+		assert.ok(claudeModels.length >= 4, 'Should have at least 4 Claude models (3.5 Sonnet, 3.5 Haiku, 3 Opus, 3 Haiku)')
+		
+		// Check for specific Claude models
+		const sonnet = claudeModels.find(m => m.id.includes('3-5-sonnet'))
+		const haiku = claudeModels.find(m => m.id.includes('3-5-haiku'))
+		const opus = claudeModels.find(m => m.id.includes('3-opus'))
+		
+		assert.ok(sonnet, 'Should have Claude 3.5 Sonnet')
+		assert.ok(haiku, 'Should have Claude 3.5 Haiku')
+		assert.ok(opus, 'Should have Claude 3 Opus')
 	})
 
 	test('Aider recommended model is properly marked', () => {
@@ -96,6 +104,24 @@ suite('Aider Provider Integration', () => {
 		const imageModels = aiderConfig.models.filter(m => m.supportsImages)
 		assert.ok(imageModels.length > 0, 'Should have models that support images')
 		
+		// Check for models with prompt caching support
+		const cacheModels = aiderConfig.models.filter(m => m.supportsPromptCache)
+		assert.ok(cacheModels.length > 0, 'Should have models that support prompt caching')
+		
+		// Verify cache pricing is set for models that support caching
+		cacheModels.forEach(model => {
+			if (model.supportsPromptCache) {
+				assert.ok(
+					model.cacheWritesPrice !== undefined || model.inputPrice === 0,
+					`Model ${model.id} should have cache writes pricing`
+				)
+				assert.ok(
+					model.cacheReadsPrice !== undefined || model.inputPrice === 0,
+					`Model ${model.id} should have cache reads pricing`
+				)
+			}
+		})
+		
 		// All Aider models should have pricing info
 		aiderConfig.models.forEach(model => {
 			assert.ok(model.inputPrice >= 0, 'Input price should be non-negative')
@@ -113,5 +139,70 @@ suite('Aider Provider Constants', () => {
 	test('Aider provider is in the provider list', () => {
 		const providerIds = Object.values(PROVIDER_IDS)
 		assert.ok(providerIds.includes('aider' as any), 'AIDER should be in provider IDs list')
+	})
+
+	test('Aider has expanded model selection', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		// Should have at least 20 models
+		assert.ok(aiderConfig.models.length >= 20, `Should have at least 20 models, has ${aiderConfig.models.length}`)
+	})
+
+	test('Aider has OpenAI models', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		const gpt4o = aiderConfig.models.find(m => m.id === 'gpt-4o')
+		const gpt4oMini = aiderConfig.models.find(m => m.id === 'gpt-4o-mini')
+		const o1Preview = aiderConfig.models.find(m => m.id === 'o1-preview')
+		const o1Mini = aiderConfig.models.find(m => m.id === 'o1-mini')
+		
+		assert.ok(gpt4o, 'Should have GPT-4o')
+		assert.ok(gpt4oMini, 'Should have GPT-4o Mini')
+		assert.ok(o1Preview, 'Should have O1 Preview')
+		assert.ok(o1Mini, 'Should have O1 Mini')
+		
+		// Check thinking models are marked correctly
+		assert.ok(o1Preview?.isThinkingModel, 'O1 Preview should be marked as thinking model')
+		assert.ok(o1Mini?.isThinkingModel, 'O1 Mini should be marked as thinking model')
+	})
+
+	test('Aider has Gemini models', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		const geminiModels = aiderConfig.models.filter(m => m.id.includes('gemini'))
+		assert.ok(geminiModels.length >= 3, 'Should have at least 3 Gemini models')
+		
+		const gemini2Flash = geminiModels.find(m => m.id.includes('2.0-flash'))
+		const gemini15Pro = geminiModels.find(m => m.id.includes('1.5-pro'))
+		
+		assert.ok(gemini2Flash, 'Should have Gemini 2.0 Flash')
+		assert.ok(gemini15Pro, 'Should have Gemini 1.5 Pro')
+	})
+
+	test('Aider has DeepSeek models', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		const deepseekChat = aiderConfig.models.find(m => m.id === 'deepseek-chat')
+		const deepseekCoder = aiderConfig.models.find(m => m.id === 'deepseek-coder')
+		
+		assert.ok(deepseekChat, 'Should have DeepSeek Chat')
+		assert.ok(deepseekCoder, 'Should have DeepSeek Coder')
+		
+		// DeepSeek Chat should support caching
+		assert.ok(deepseekChat?.supportsPromptCache, 'DeepSeek Chat should support prompt caching')
+	})
+
+	test('Aider has Mistral models', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		const mistralModels = aiderConfig.models.filter(m => m.id.includes('mistral'))
+		assert.ok(mistralModels.length >= 2, 'Should have at least 2 Mistral models')
+	})
+
+	test('Aider has Llama models', () => {
+		const aiderConfig = providerConfigs[PROVIDER_IDS.AIDER]
+		
+		const llamaModels = aiderConfig.models.filter(m => m.id.includes('llama'))
+		assert.ok(llamaModels.length >= 2, 'Should have at least 2 Llama models')
 	})
 })
