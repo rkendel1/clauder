@@ -4,6 +4,50 @@ All notable changes to the "claude-coder" extension will be documented in this f
 
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [Unreleased]
+
+### Added
+
+- **Expanded Aider LLM Selection**: Added 20+ new models to Aider provider
+  - OpenAI: GPT-4o, GPT-4o Mini, O1 Preview, O1 Mini (thinking models)
+  - Claude: Claude 3.5 Haiku, Claude 3 Haiku (with existing Sonnet and Opus)
+  - Google Gemini: Gemini 2.0 Flash Exp, Gemini 1.5 Pro, Gemini 1.5 Flash
+  - DeepSeek: DeepSeek Chat, DeepSeek Coder
+  - Mistral: Mistral Large, Mistral Medium
+  - Meta Llama: Llama 3.1 70B, Llama 3.1 405B
+- **Prompt Caching Support**: Enabled for compatible models across providers
+  - GPT-4o and GPT-4o Mini support prompt caching (up to 90% cost reduction)
+  - All Claude models support prompt caching
+  - Gemini models support prompt caching
+  - DeepSeek Chat supports prompt caching
+  - Automatic cache pricing calculation for cost transparency
+- **Unified Caching Mechanism**: Created generic `CacheManager` class
+  - Configurable TTL (Time To Live) for cache freshness
+  - Persistent file-based caching across sessions
+  - In-memory cache for faster access
+  - Manual cache invalidation support
+  - Thread-safe fetch operations
+  - Refactored OpenRouter cache to use new unified system
+
+### Documentation
+
+- Created comprehensive Aider models documentation (`extension/docs/AIDER-MODELS.md`)
+  - Detailed pricing information for all models
+  - Model selection guide for different use cases
+  - Feature comparison and recommendations
+- Created caching mechanism documentation (`extension/docs/CACHING.md`)
+  - Architecture overview and usage examples
+  - Cache management instructions
+  - Best practices and configuration options
+- Updated AIDER.md with new model selection information
+
+### Testing
+
+- Extended Aider test suite with comprehensive model validation
+- Created cache manager test suite with 10+ test cases
+- Added tests for prompt caching configurations
+- Validates all model categories and features
+
 ## [2.3.11] - 2025-03-17
 
 ### Fixed

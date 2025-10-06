@@ -12,6 +12,8 @@ Think of Kuhmpel as your 24/7 AI-powered Software Developer. It's a VS Code exte
 
 **🎯 Multi-Provider Support**: Choose from multiple AI providers including Anthropic, OpenAI, DeepSeek, Google, Mistral, and more. No vendor lock-in - switch providers seamlessly based on your needs. [Learn more about provider support](PROVIDER-SUPPORT.md)
 
+**🆕 Enhanced Aider Integration**: The Aider provider now supports **20+ models** with prompt caching for cost reduction. Choose from GPT-4o, Claude 3.5 Sonnet, Gemini models, DeepSeek, and more. [See Aider models documentation](./extension/docs/AIDER-MODELS.md)
+
 All you need to is tell Claude what's your task and Claude will take care of it for you, need a website? dashboard? server? design? Claude got it all covered for you.
 
 ### 🌟 Here's what Kuhmpel can do for you:
