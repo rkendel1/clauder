@@ -24,6 +24,52 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/default
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/frameworks/hello-world-react-cra
 
 */
+// 🧩 TASK FOR COPILOT:
+// Enhance this VS Code extension to include a fully interactive browser panel inside VS Code.
+// The panel should:
+//
+// 1. Create a WebView panel named "Browser Inspector" that loads http://localhost:3000 by default.
+//    - The URL should be configurable (allow user input or setting).
+//    - Use enableScripts: true and appropriate localResourceRoots.
+//
+// 2. Inside the WebView, inject an <iframe> that shows the live web app (the "browser" view).
+//    - Overlay a click listener inside the iframe that detects user clicks on elements.
+//    - When the user clicks on an element, capture:
+//        - The tag name
+//        - The CSS selector (smartly generated, like "button.primary" or "div#root > span")
+//        - Any "data-component" attribute if present.
+//    - Send that data to the extension backend using postMessage.
+//
+// 3. In the extension backend (TypeScript), listen for postMessage events with type: "elementSelected".
+//    - When received, run this VS Code command:
+//        vscode.commands.executeCommand("claude.chat", `Explain this component: ${selector}`);
+//      OR if Claude is unavailable, log the element selector and tag to the VS Code output console.
+//
+// 4. Add a command palette entry:
+//        Command ID: "extension.openBrowserInspector"
+//        Title: "Open Browser Inspector"
+//    - When triggered, open or reveal the WebView panel beside the current editor.
+//
+// 5. Add a simple toolbar or toggle button inside the WebView labeled “Inspect Mode”.
+//    - When Inspect Mode is active:
+//        - Highlight hovered elements with an outline.
+//        - Clicking sends the element info back to VS Code (as above).
+//
+// 6. Include a helper function to generate CSS selectors for elements based on their hierarchy and attributes.
+//
+// 🧠 OPTIONAL:
+// - Add a text input in the panel header to let the user change the iframe URL dynamically.
+// - Make the extension smart enough to reuse the same WebView if it’s already open.
+// - Use async/await properly for command handling and event listeners.
+//
+// ✅ Goal: Make this behave like a mini embedded browser that can talk to Claude (Anthropic) or Copilot
+//    when the user clicks on a UI component. 
+//    The user should be able to ask the AI about the selected element’s purpose or code source.
+//
+// Please generate the complete TypeScript code to implement this feature in the existing extension.
+// Include necessary command registration, WebView setup, HTML injection, and message passing.
+
+
 
 let outputChannel: vscode.OutputChannel
 
