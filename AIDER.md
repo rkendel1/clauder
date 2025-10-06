@@ -13,7 +13,28 @@ This guide explains how to use Aider as an AI provider with the Kuhmpel VS Code 
 - Edit existing code with precise modifications
 - Create new files and features
 - Understand entire codebases through git integration
-- Work with multiple AI models (OpenAI, Anthropic, etc.)
+- Work with multiple AI models (OpenAI, Anthropic, Google, DeepSeek, Mistral, Meta Llama, etc.)
+
+## ✨ New in This Version
+
+### Expanded Model Selection
+The Aider provider now supports **20+ models** from multiple providers:
+- **OpenAI**: GPT-4o, GPT-4o Mini, O1 Preview, O1 Mini, GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
+- **Claude (Anthropic)**: Claude 3.5 Sonnet, Claude 3.5 Haiku, Claude 3 Opus, Claude 3 Haiku
+- **Google Gemini**: Gemini 2.0 Flash Exp, Gemini 1.5 Pro, Gemini 1.5 Flash
+- **DeepSeek**: DeepSeek Chat, DeepSeek Coder
+- **Mistral**: Mistral Large, Mistral Medium
+- **Meta Llama**: Llama 3.1 70B, Llama 3.1 405B
+
+### Prompt Caching Support
+Many models now support **prompt caching** to reduce costs:
+- **Up to 90% cost reduction** for cached portions of prompts
+- Automatic cache management with configurable TTL
+- Support for OpenAI, Claude, Gemini, and DeepSeek models
+
+📖 **See [Aider Models Documentation](./extension/docs/AIDER-MODELS.md) for detailed model information and pricing**
+
+📖 **See [Caching Documentation](./extension/docs/CACHING.md) for caching mechanism details**
 
 ## 🎯 Why Use Aider with Kuhmpel?
 

@@ -1,29 +1,23 @@
 // OpenRouter model cache manager
 import axios from "axios"
 import * as vscode from "vscode"
-import * as fs from "fs/promises"
-import * as path from "path"
 import { ModelInfo } from "../types"
 import { PROVIDER_IDS } from "../constants"
-
-// Cache lifetime (1 hour in milliseconds)
-const CACHE_LIFETIME = 60 * 60 * 1000
-
-// Cache file name
-const OPENROUTER_MODELS_FILENAME = "openrouter-models.json"
+import { CacheManager } from "./cache-manager"
 
 /**
  * OpenRouter Model Cache Manager - Singleton class to handle caching OpenRouter models
  */
 export class OpenRouterModelCache {
 	private static instance: OpenRouterModelCache | null = null
-	private context: vscode.ExtensionContext
-	private cache: ModelInfo[] = []
-	private lastFetched: number = 0
-	private isFetching: boolean = false
+	private cacheManager: CacheManager<ModelInfo[]>
 
 	private constructor(context: vscode.ExtensionContext) {
-		this.context = context
+		this.cacheManager = new CacheManager<ModelInfo[]>(context, {
+			filename: "openrouter-models.json",
+			ttl: 60 * 60 * 1000, // 1 hour
+			useMemoryCache: true,
+		})
 	}
 
 	/**
@@ -37,61 +31,6 @@ export class OpenRouterModelCache {
 			OpenRouterModelCache.instance = new OpenRouterModelCache(context)
 		}
 		return OpenRouterModelCache.instance
-	}
-
-	/**
-	 * Check if cache is stale
-	 */
-	private isCacheStale(): boolean {
-		return Date.now() - this.lastFetched > CACHE_LIFETIME
-	}
-
-	/**
-	 * Get cache file path
-	 */
-	private async getCacheFilePath(): Promise<string> {
-		const cacheDir = await this.ensureCacheDirectoryExists()
-		return path.join(cacheDir, OPENROUTER_MODELS_FILENAME)
-	}
-
-	/**
-	 * Ensures the cache directory exists
-	 */
-	private async ensureCacheDirectoryExists(): Promise<string> {
-		const cacheDir = path.join(this.context.globalStorageUri.fsPath, "cache")
-		try {
-			await fs.mkdir(cacheDir, { recursive: true })
-		} catch (error) {
-			console.error("Error creating cache directory:", error)
-		}
-		return cacheDir
-	}
-
-	/**
-	 * Load models from cache file
-	 */
-	private async loadFromCache(): Promise<ModelInfo[]> {
-		try {
-			const cacheFilePath = await this.getCacheFilePath()
-			const data = await fs.readFile(cacheFilePath, "utf-8")
-			return JSON.parse(data)
-		} catch (error) {
-			console.log("No cache file found or error reading cache, will fetch fresh models")
-			return []
-		}
-	}
-
-	/**
-	 * Save models to cache file
-	 */
-	private async saveToCache(models: ModelInfo[]): Promise<void> {
-		try {
-			const cacheFilePath = await this.getCacheFilePath()
-			await fs.writeFile(cacheFilePath, JSON.stringify(models, null, 2))
-			console.log("OpenRouter models saved to cache")
-		} catch (error) {
-			console.error("Error saving OpenRouter models to cache:", error)
-		}
 	}
 
 	/**
@@ -160,42 +99,29 @@ export class OpenRouterModelCache {
 	 * Get models - returns cached models or fetches new ones if cache is stale
 	 */
 	public async getModels(): Promise<ModelInfo[]> {
-		// If we already have a cache and it's not stale, return it
-		if (this.cache.length > 0 && !this.isCacheStale()) {
-			return this.cache
-		}
+		const models = await this.cacheManager.get(() => this.fetchModelsFromApi())
+		return models || []
+	}
 
-		// If we're already fetching, wait a bit and try again
-		if (this.isFetching) {
-			await new Promise((resolve) => setTimeout(resolve, 500))
-			return this.getModels()
-		}
+	/**
+	 * Invalidate the cache manually
+	 */
+	public async invalidateCache(): Promise<void> {
+		await this.cacheManager.invalidate()
+	}
 
-		try {
-			this.isFetching = true
+	/**
+	 * Check if cache is valid
+	 */
+	public isCacheValid(): boolean {
+		return this.cacheManager.isValid()
+	}
 
-			// Try to load from file cache first
-			if (this.cache.length === 0) {
-				this.cache = await this.loadFromCache()
-
-				// If we got models from the cache and they're not stale, use them
-				if (this.cache.length > 0 && !this.isCacheStale()) {
-					return this.cache
-				}
-			}
-
-			// If cache is stale or empty, fetch new models
-			const models = await this.fetchModelsFromApi()
-
-			if (models.length > 0) {
-				this.cache = models
-				this.lastFetched = Date.now()
-				await this.saveToCache(models)
-			}
-
-			return this.cache
-		} finally {
-			this.isFetching = false
-		}
+	/**
+	 * Get cache age in milliseconds
+	 */
+	public getCacheAge(): number {
+		return this.cacheManager.getCacheAge()
 	}
 }
+
