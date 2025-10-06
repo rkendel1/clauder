@@ -15,6 +15,7 @@ import DB from "./db"
 import { OpenRouterModelCache } from "./api/providers/config/openrouter-cache"
 import { SecretStateManager } from "./providers/state/secret-state-manager"
 import { GlobalStateManager } from "./providers/state/global-state-manager"
+import { BrowserInspectorManager } from "./browser-inspector/browser-inspector-manager"
 
 /*
 Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -177,6 +178,14 @@ export function activate(context: vscode.ExtensionContext) {
 			sidebarProvider
 				?.getWebviewManager()
 				?.postMessageToWebview({ type: "action", action: "historyButtonTapped" })
+		})
+	)
+
+	// Register Browser Inspector command
+	context.subscriptions.push(
+		vscode.commands.registerCommand("extension.openBrowserInspector", async () => {
+			const browserInspector = BrowserInspectorManager.getInstance(context, outputChannel)
+			await browserInspector.openBrowserInspector()
 		})
 	)
 

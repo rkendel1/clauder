@@ -92,6 +92,11 @@
 				"title": "Open External Link"
 			},
 			{
+				"command": "extension.openBrowserInspector",
+				"title": "Open Browser Inspector",
+				"category": "Kuhmpel"
+			},
+			{
 				"command": "kuhmpel-coder-main.plusButtonTapped",
 				"title": "New Task",
 				"icon": "$(add)"
