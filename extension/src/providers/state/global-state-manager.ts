@@ -19,7 +19,6 @@ const defaults: Partial<GlobalState> = {
 	apiConfig: {
 		providerId: "anthropic",
 		modelId: "claude-3-5-sonnet-20241022",
-		koduApiKey: "-",
 	},
 	disabledTools: [],
 }

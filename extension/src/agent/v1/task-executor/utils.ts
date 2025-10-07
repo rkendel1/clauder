@@ -30,8 +30,6 @@ export class TaskError extends Error {
 		| "TOOL_ERROR"
 		| "USER_ABORT"
 		| "UNKNOWN_ERROR"
-		| "UNAUTHORIZED"
-		| "PAYMENT_REQUIRED"
 		| "NETWORK_ERROR"
 	constructor({
 		type,
@@ -42,8 +40,6 @@ export class TaskError extends Error {
 			| "TOOL_ERROR"
 			| "USER_ABORT"
 			| "UNKNOWN_ERROR"
-			| "UNAUTHORIZED"
-			| "PAYMENT_REQUIRED"
 			| "NETWORK_ERROR"
 		message: string
 	}) {

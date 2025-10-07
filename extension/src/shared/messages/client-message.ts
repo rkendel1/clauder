@@ -225,8 +225,6 @@ export type WebviewMessage =
 				| "deleteTaskWithId"
 				| "exportTaskWithId"
 				| "promptEditorLoaded"
-				| "didClickKoduSignOut"
-				| "fetchKoduCredits"
 				| "resetState"
 				| "fileTree"
 			text?: string

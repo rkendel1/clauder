@@ -1,6 +1,4 @@
 import { AlertCircle, LogIn, CircleX, X, ChevronDown, ChevronRight, Settings } from "lucide-react"
-import { loginKodu } from "@/utils/kodu-links"
-import { useExtensionState } from "@/context/extension-state-context"
 
 function formatElapsedTime(ms: number): string {
 	const seconds = Math.floor(ms / 1000)
@@ -359,25 +357,18 @@ export function CustomProviderSettingRequired({ text }: { text: string }) {
 const buttonStyles =
 	"w-full py-1 px-2 text-xs border border-destructive/50 rounded hover:bg-destructive/10 transition-colors"
 export function ErrorMsgComponent({ type }: { type: "unauthorized" | "payment_required" }) {
-	const { uriScheme, extensionName } = useExtensionState()
 	return (
 		<div className="border border-destructive/50 rounded-md p-4 max-w-[360px] mx-auto bg-background/5">
 			<div className="flex items-center space-x-2 text-destructive">
 				<AlertCircle className="h-4 w-4" />
-				<h4 className="font-semibold text-sm">
-					{type === "unauthorized" ? "Unauthorized Access" : "Payment Required"}
-				</h4>
+				<h4 className="font-semibold text-sm">Authentication Required</h4>
 			</div>
 			<p className="text-destructive/90 text-xs mt-2">
-				{type === "unauthorized"
-					? "You are not authorized to run this command. Please log in or contact your administrator."
-					: "You have run out of credits. Please contact your administrator."}
+				Please log in to continue.
 			</p>
 			<div className="flex flex-col gap-2 mt-3">
 				<button className={buttonStyles}>
-					<span
-						onClick={() => loginKodu({ uriScheme: uriScheme!, extensionName: extensionName! })}
-						className="flex items-center justify-center">
+					<span className="flex items-center justify-center">
 						<LogIn className="mr-2 h-3 w-3" /> Log In
 					</span>
 				</button>
