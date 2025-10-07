@@ -3,7 +3,6 @@ dist
 node_modules
 webview-ui-vite/node_modules
 .vscode-test/
-*.vsix
 .env
 .env.local
 # Lock files - support both npm and yarn
