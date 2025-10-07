@@ -19,14 +19,16 @@ services:
       
       # Aider Configuration
       - AIDER_PORT=8080
-      - AIDER_API_KEY=${AIDER_API_KEY:-}
       - AIDER_MODEL=${AIDER_MODEL:-gpt-4}
       - AIDER_BASE_URL=http://localhost:8080/v1
       
-      # Additional AI Provider API Keys (optional)
+      # AI Provider API Keys
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       
       # Workspace settings
       - WORKSPACE_DIR=/workspace

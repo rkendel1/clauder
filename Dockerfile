@@ -25,36 +25,43 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
-    # Node.js tools (if not already included)
-    nodejs \
-    npm \
     # Other utilities
     jq \
     unzip \
     vim \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Install Node.js 20.x
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest && \
+    npm install -g pnpm
+
+# Configure npm to use legacy peer deps by default
+RUN npm config set legacy-peer-deps true
 
 # Copy Aider source code
 COPY --chown=root:root ./aider-source /tmp/aider-source
 
 # Install Aider from local source
 # Create a virtual environment for Aider to avoid conflicts
-RUN python3 -m venv /opt/aider-venv && \
+RUN SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0 \
+    python3 -m venv /opt/aider-venv && \
     /opt/aider-venv/bin/pip install --upgrade pip && \
-    /opt/aider-venv/bin/pip install /tmp/aider-source && \
+    SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0 /opt/aider-venv/bin/pip install /tmp/aider-source && \
     rm -rf /tmp/aider-source
 
 # Create symbolic link for easy access
 RUN ln -s /opt/aider-venv/bin/aider /usr/local/bin/aider
 
-# Create workspace directory
+# Create workspace and Aider directories with correct permissions
 RUN mkdir -p ${WORKSPACE_DIR} && \
-    chown -R coder:coder ${WORKSPACE_DIR}
+    mkdir -p /home/coder/.aider && \
+    chown -R coder:coder ${WORKSPACE_DIR} && \
+    chown -R coder:coder /home/coder/.aider && \
+    chmod 755 /home/coder/.aider
 
-# Switch back to coder user
+# Switch to coder user
 USER coder
 
 # Create directory for VS Code extensions
@@ -65,10 +72,42 @@ COPY --chown=coder:coder ./extension /tmp/kuhmpel-extension
 
 # Build and install the extension
 WORKDIR /tmp/kuhmpel-extension
-RUN npm install --legacy-peer-deps && \
+
+# Stage 1: Install dependencies
+RUN set -e && \
+    echo "Stage 1: Installing dependencies..." && \
+    npm install --legacy-peer-deps && \
     npm run install:all && \
+    echo "✓ Dependencies installed successfully"
+
+# Stage 2: Build webview
+RUN set -e && \
+    echo "Stage 2: Building webview..." && \
+    cd webview-ui-vite && \
+    npm run build && \
+    test -d dist && \
+    echo "✓ Webview built successfully" && \
+    cd ..
+
+# Stage 3: Build extension
+RUN set -e && \
+    echo "Stage 3: Building extension..." && \
     npm run package && \
-    code-server --install-extension kuhmpel-*.vsix && \
+    echo "✓ Extension built successfully"
+
+# Stage 4: Create and verify VSIX package
+RUN set -e && \
+    echo "Stage 4: Creating VSIX package..." && \
+    npm run build && \
+    test -f kuhmpel-2.3.13.vsix && \
+    echo "✓ VSIX package created successfully"
+
+# Stage 5: Install and verify extension
+RUN set -e && \
+    echo "Stage 5: Installing extension..." && \
+    code-server --install-extension kuhmpel-2.3.13.vsix && \
+    test -d /home/coder/.local/share/code-server/extensions/rkendel1.kuhmpel-2.3.13 && \
+    echo "✓ Extension installed successfully" && \
     rm -rf /tmp/kuhmpel-extension
 
 # Create startup script
@@ -83,12 +122,20 @@ echo "Starting Kuhmpel Development Environment..."
 # Set default AIDER_BASE_URL for extension integration
 export AIDER_BASE_URL="${AIDER_BASE_URL:-http://localhost:${AIDER_PORT}/v1}"
 
-# Create default Aider configuration if it doesn't exist
+# Create or update Aider configuration
 AIDER_CONFIG_DIR="/home/coder/.aider"
-mkdir -p "$AIDER_CONFIG_DIR"
+AIDER_CONFIG_FILE="$AIDER_CONFIG_DIR/.aider.conf.yml"
 
-# Create .aider.conf.yml with default settings for CA Code Extension integration
-cat > "$AIDER_CONFIG_DIR/.aider.conf.yml" <<'AIDERCONF'
+# Create config directory if it doesn't exist
+if [ ! -d "$AIDER_CONFIG_DIR" ]; then
+    mkdir -p "$AIDER_CONFIG_DIR"
+    chown coder:coder "$AIDER_CONFIG_DIR"
+    chmod 755 "$AIDER_CONFIG_DIR"
+fi
+
+# Create config file if it doesn't exist
+if [ ! -f "$AIDER_CONFIG_FILE" ]; then
+    tee "$AIDER_CONFIG_FILE" > /dev/null <<'AIDERCONF'
 # Aider configuration for CA Code Extension integration
 # This file is auto-generated on container startup
 # You can override these settings by modifying this file
@@ -106,28 +153,21 @@ map-tokens: 1024
 edit-format: diff
 show-diffs: true
 AIDERCONF
-
-chown -R coder:coder "$AIDER_CONFIG_DIR"
-
-# Start Aider server in the background if API key is provided
-if [ -n "$AIDER_API_KEY" ]; then
-    echo "Starting Aider service on port ${AIDER_PORT}..."
-    echo "Aider API will be available at: ${AIDER_BASE_URL}"
-    /opt/aider-venv/bin/aider \
-        --api-key "$AIDER_API_KEY" \
-        --model "${AIDER_MODEL:-gpt-4}" \
-        --no-auto-commits \
-        --yes \
-        --listen 0.0.0.0:${AIDER_PORT} &
-    AIDER_PID=$!
-    echo "Aider started with PID $AIDER_PID"
-else
-    echo "AIDER_API_KEY not set, skipping Aider service startup"
-    echo "You can set it via environment variable or configure it later"
+    chown coder:coder "$AIDER_CONFIG_FILE"
+    chmod 644 "$AIDER_CONFIG_FILE"
 fi
 
+# Start Aider server in the background
+/opt/aider-venv/bin/aider \
+    --model "${AIDER_MODEL:-gpt-4}" \
+    --no-auto-commits \
+    --yes \
+    --listen 0.0.0.0:${AIDER_PORT} &
+
+echo "Aider started on port ${AIDER_PORT}"
+echo "Aider API will be available at: ${AIDER_BASE_URL}"
+
 # Start code-server
-echo "Starting Code Server on port ${CODE_SERVER_PORT}..."
 exec code-server \
     --bind-addr 0.0.0.0:${CODE_SERVER_PORT} \
     --auth "${CODE_SERVER_AUTH:-password}" \
