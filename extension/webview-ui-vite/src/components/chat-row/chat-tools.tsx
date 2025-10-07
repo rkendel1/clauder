@@ -119,7 +119,15 @@ export const ToolBlock: React.FC<ToolBlockProps> = ({
 			)}>
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center">
-					<Icon className={cn("w-5 h-5 mr-2", `text-${variant}`)} />
+					<Icon className={cn("w-5 h-5 mr-2", {
+						"text-primary": variant === "primary",
+						"text-secondary": variant === "info",
+						"text-accent": variant === "accent",
+						"text-success": variant === "success",
+						"text-info": variant === "info",
+						"text-muted": variant === "default",
+						"text-destructive": variant === "destructive",
+					})} />
 					<h3 className="text-sm font-semibold">{title}</h3>
 				</div>
 

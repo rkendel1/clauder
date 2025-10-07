@@ -1,5 +1,6 @@
 import plugin from "tailwindcss"
 import tailwindcssAnimate from "tailwindcss-animate"
+import typography from "@tailwindcss/typography"
 
 function parseColor(color) {
 	if (color.startsWith("#")) {
@@ -141,6 +142,7 @@ export default {
 	},
 	plugins: [
 		tailwindcssAnimate,
+		typography,
 
 		plugin(function ({ addUtilities, theme }) {
 			const colors = theme("colors")

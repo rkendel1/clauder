@@ -55,8 +55,6 @@ const MarkdownRendererBase: React.FC<MarkdownRendererProps> = ({ markdown, child
 						// Customize code blocks
 						code: ({ node, className, children, ...props }) => {
 							const match = /language-(\w+)/.exec(className || "")
-							console.log("match", match)
-							console.log(node)
 
 							if (match) {
 								// This is a fenced code block with a language
@@ -64,7 +62,7 @@ const MarkdownRendererBase: React.FC<MarkdownRendererProps> = ({ markdown, child
 							} else {
 								// Inline code block
 								return (
-									<code className="rounded bg-gray-100 dark:bg-gray-800 px-1 py-0.5 font-mono text-sm overflow-auto">
+									<code className="rounded bg-muted px-1 py-0.5 font-mono text-sm overflow-auto">
 										{children}
 									</code>
 								)
@@ -74,14 +72,14 @@ const MarkdownRendererBase: React.FC<MarkdownRendererProps> = ({ markdown, child
 						img: ({ node, ...props }) => (
 							<img
 								{...props}
-								className="rounded-lg border border-gray-300 dark:border-gray-700 max-w-full h-auto"
+								className="rounded-lg border border-border max-w-full h-auto"
 							/>
 						),
 						// Example customization for blockquotes
 						blockquote: ({ node, ...props }) => (
 							<blockquote
 								{...props}
-								className="mt-6 border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic text-gray-600 dark:text-gray-300"
+								className="mt-6 border-l-4 border-muted pl-4 italic text-muted-foreground"
 							/>
 						),
 						// You can override other elements as needed, but `prose` handles most gracefully.
