@@ -241,7 +241,8 @@ export class CustomApiHandler implements ApiHandler {
 
 		if (
 			currentModel.supportsPromptCache &&
-			(currentModel.provider === "anthropic" || currentModel.id.includes("anthropic"))
+			(currentModel.provider === "anthropic" || currentModel.id.includes("anthropic") ||
+				(currentModel.provider === "aider" && currentModel.id.includes("claude")))
 		) {
 			// we want to add prompt caching
 			let index = 0
@@ -273,6 +274,18 @@ export class CustomApiHandler implements ApiHandler {
 				}
 			}
 			addCacheControl([lastSystemIndex, lastUserIndex, secondLastUserIndex])
+		}
+
+		// Google Gemini context caching
+		if (
+			currentModel.supportsPromptCache &&
+			(currentModel.provider === "google-genai" ||
+				(currentModel.provider === "aider" && currentModel.id.includes("gemini")))
+		) {
+			// Google Gemini uses automatic context caching via the AI SDK
+			// The cachedContent API is used automatically by the Google provider
+			// when messages are reused across requests
+			// No explicit cache control markers needed - Google handles this automatically
 		}
 		// const refetchSignal = new SmartAbortSignal(5000)
 		const result = streamText({
