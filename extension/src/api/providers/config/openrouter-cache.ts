@@ -78,11 +78,18 @@ export class OpenRouterModelCache {
 					modelInfo.cacheWritesPrice = inputPrice * 1.25
 					modelInfo.cacheReadsPrice = inputPrice * 0.1
 				}
-				if (model.id === "deepseek/deepseek-chat") {
+				// Detect all DeepSeek models (not just deepseek-chat)
+				if (model.id.includes("deepseek")) {
 					modelInfo.supportsPromptCache = true
-					modelInfo.inputPrice = 0
-					modelInfo.cacheWritesPrice = 0.14
-					modelInfo.cacheReadsPrice = 0.014
+					// DeepSeek cache pricing: cache writes same as input, reads are 10% of input
+					if (model.id === "deepseek/deepseek-chat") {
+						modelInfo.inputPrice = 0
+						modelInfo.cacheWritesPrice = 0.14
+						modelInfo.cacheReadsPrice = 0.014
+					} else {
+						modelInfo.cacheWritesPrice = inputPrice || 0.14
+						modelInfo.cacheReadsPrice = (inputPrice || 0.14) * 0.1
+					}
 				}
 
 				return modelInfo

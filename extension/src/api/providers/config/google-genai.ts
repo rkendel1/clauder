@@ -15,9 +15,9 @@ export const googleGenAIConfig: ProviderConfig = {
 			supportsImages: true,
 			inputPrice: 0.1,
 			outputPrice: 0.4,
-			// cacheReadsPrice: 0, // free for now
-			// cacheWritesPrice: 0, // free for now
-			supportsPromptCache: false,
+			cacheReadsPrice: 0.025, // 75% discount on cache reads
+			cacheWritesPrice: 0.1, // same as input for cache writes
+			supportsPromptCache: true,
 			provider: PROVIDER_IDS.GOOGLE_GENAI,
 		},
 		{
@@ -28,9 +28,9 @@ export const googleGenAIConfig: ProviderConfig = {
 			supportsImages: true,
 			inputPrice: 0.0, // free for now
 			outputPrice: 0.0, // free for now
-			// cacheReadsPrice: 0, // free for now
-			// cacheWritesPrice: 0, // free for now
-			supportsPromptCache: false,
+			cacheReadsPrice: 0, // free for now
+			cacheWritesPrice: 0, // free for now
+			supportsPromptCache: true,
 			provider: PROVIDER_IDS.GOOGLE_GENAI,
 		},
 		{
@@ -43,7 +43,7 @@ export const googleGenAIConfig: ProviderConfig = {
 			outputPrice: 0, // free for now
 			cacheReadsPrice: 0, // free for now
 			cacheWritesPrice: 0, // free for now
-			supportsPromptCache: false,
+			supportsPromptCache: true,
 			provider: PROVIDER_IDS.GOOGLE_GENAI,
 		},
 		{
@@ -56,7 +56,7 @@ export const googleGenAIConfig: ProviderConfig = {
 			outputPrice: 0, // free for now
 			cacheReadsPrice: 0, // free for now
 			cacheWritesPrice: 0, // free for now
-			supportsPromptCache: false,
+			supportsPromptCache: true,
 			isThinkingModel: true,
 			provider: PROVIDER_IDS.GOOGLE_GENAI,
 		},
